@@ -1,0 +1,122 @@
+
+<div class="mainwrap">
+    <div class="header"><span>维保管理</span>><span>维保记录</span></div>
+    <form class="main-choose-list overflowH" id="searchForm">
+        <!--搜索-->
+            <div class="search-wrap">
+                <span class="icon-icon_search" ></span><input name="Inquire" type="text" class="form-control" placeholder="请输入关键字"/>
+            </div>
+        <!--按钮列-->
+            <select class="form-control" name="UseId" id="userUnit">
+                <option value="" >使用单位</option> 
+            </select>
+            <select class="form-control" name="MainId" id="maintance">
+                <option value="">维保单位</option>
+            </select>
+            <input type="text" name="BeginTime" class="form laydate-icon" id="start1" placeholder="开始时间" readonly />
+            <input type="text" name="EndTime" class="form laydate-icon" id="end1" placeholder="结束时间" readonly />
+            <button type="button" class="btn btn-info searchBtn" onclick="searchPost()">查询</button>
+    </form>
+    <div class="main">
+        <!--表格列表-->
+        <table class="table table-striped table-hover table-bordered"  align="center">
+            <thead>
+                <th width="18%">维保编号</th>
+                <th width="18%">电梯名称</th>
+<!--                <th width="14%">设备编号</th>-->
+                <th width="20%">使用单位</th>
+                <th width="20%">维保单位</th>
+                <th width="10%">维保人员</th>
+                <th width="14%">维保时间</th>
+            </thead>
+            <tbody id="tbody">
+            </tbody>
+        </table>
+        <div class="page">
+            <div class="pageWrap">
+				<ul class="pagination">
+					<li class="Previous">
+						<span aria-hidden="true">&laquo;</span>
+					</li>
+					
+					<li class="Next">
+						<span aria-hidden="true">&raquo;</span>
+					</li>
+				</ul>
+				<span>共0条数据</span>
+			</div>
+            <button class="icon-icon_daochu btn btn-info pull-right" onclick="exportInfo()">  导出</button>
+        </div>
+    </div>
+</div>
+
+<script id="tbodyInfo" type="text/x-handlebars-template">
+    {{#each this}}
+    <tr>
+        <td title="{{MainCode}}">{{MainCode}}</td>
+        <td title="{{EleJobNo}}">{{EleJobNo}}</td>
+<!--        <td title="{{EleDeviceId}}">{{EleDeviceId}}</td>-->
+        <td title="{{UseName}}">{{UseName}}</td>
+        <td title="{{MainUnitName}}">{{MainUnitName}}</td>
+        <td title="{{EmpName}}">{{EmpName}}</td>
+        <td title="{{MainCreateTimeView}}">{{MainCreateTimeView}}</td>
+    </tr>
+    {{/each}}
+</script>
+<script>
+/*获取列表*/
+    var url=configSet+"/api/events/getmaintenanceInfolist";
+    //获取数据
+    $(function () {
+        getData2("#searchForm",url,1,"#tbody","#tbodyInfo")
+    })
+ 	
+ 	 //搜索
+    function searchPost(){
+    	getData2("#searchForm",url,1,"#tbody","#tbodyInfo");
+    	//？？？？？？？？？？？？？？？？修改人--梁登高
+//      setTimeout(function () {
+//        $('.page').show()
+//        $('.pageWrap').hide();
+//      },100)
+        /*$(".page").css("display","block !important");
+    	$(".pageWrap").css("display","none");*/
+    	//alert(1)
+    }
+ 	
+    //分页
+	$(".pagination").on("click","a",function () {
+      $(this).parent().addClass("actived").siblings().removeClass("actived");
+	    var pagenum=parseInt($(this).text());
+	    var formse = $("#searchForm").serializeObject();
+		  	formse.pagesize = pageSize;
+	      	formse.pagenum = pagenum;
+	      	 formse.Loginer=loginer;
+	      	console.log(url)
+	      	console.log(formse)
+		postData(url, JSON.stringify(formse), function (Obj,pageNum) {
+			var myTemplate = Handlebars.compile($("#tbodyInfo").html());
+       		$('#tbody').html(myTemplate(JSON.parse(Obj)));
+  		})
+	})
+      
+      
+	var userUrl=configSet+"/api/unitmanage/useunitinfolist?pagesize=999&pagenum=1&inquire";
+	var maintanceUrl=configSet+"/api/unitmanage/maintenanceunitInfolist?pagesize=999&pagenum=1&inquire";
+      
+	Option(userUrl,$("#userUnit"),"UseName","UseId");  
+	Option(maintanceUrl,$("#maintance"),"MainName","MainId");
+
+	//文件导出
+	function exportInfo(){
+      window.open(configSet+"/api/file/maininfoexport?"+$("#searchForm").serialize()+"&loginer="+loginer);
+
+	}
+      
+	//日期
+	$(function(){
+		dataInit("#start1","#end1");	
+	})
+  
+  
+</script>

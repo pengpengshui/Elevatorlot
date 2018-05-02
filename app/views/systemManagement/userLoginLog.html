@@ -1,0 +1,199 @@
+
+<div class="mainwrap">
+    <div class="header"><span>系统管理</span>><span>用户登录日志</span></div>
+    <form class="main-choose-list overflowH" id="searchForm">
+        <!--搜索-->
+            <div class="search-wrap">
+                <span class="icon-icon_search" ></span><input name="vague" type="text" class="form-control" placeholder="用户名"/>
+            </div>
+        <!--按钮列-->
+            <input type="text" name="BeginTime" class="form laydate-icon" id="start1" placeholder="开始时间" readonly />
+            <input type="text" name="EndTime" class="form laydate-icon" id="end1" placeholder="结束时间" readonly />
+            <!--<span class="icon-icon_nav_zhank"></span>-->
+            <button type="button" class="btn btn-info searchBtn">查询</button>
+    </form>
+    <div class="main">
+        <!--表格列表-->
+        <table class="table table-striped table-hover table-bordered"  align="center">
+            <thead>
+                <th width="20%">用户名</th>
+                <th width="20%">登录IP</th>
+                <th width="20%">登入时间</th>
+                <th width="20%">登出时间</th>
+                <th width="20%">操作详情</th>
+            </thead>
+            <tbody id="tbody">
+            	
+            </tbody>
+        </table>
+        <div class="page">
+            <div class="pageWrap">
+				<ul class="pagination">
+					<li class="Previous">
+						<span aria-hidden="true">&laquo;</span>
+					</li>
+					
+					<li class="Next">
+						<span aria-hidden="true">&raquo;</span>
+					</li>
+				</ul>
+				<span>共0条数据</span>
+			</div>
+        </div>
+    </div>
+</div>
+<!--查看详情弹框-->
+<!--<div class="modal fade" id="handleDetailModel" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h5 class="modal-title" id="gridSystemModalLabel">操作详情</h5>
+      </div>
+      <div class="modal-body modelStyle">
+      	<form id="addForm">
+			  <div class="row ">
+				  <div class="col-md-2 child">用户名</div>
+				  <div class="col-md-4">admin</div>
+				  <div class="col-md-2 child">登录IP</div>
+				  <div class="col-md-4">192.168.1.1</div>
+			  </div>
+			  <div class="row ">
+				  <div class="col-md-2 child">登入时间</div>
+				  <div class="col-md-4">2017-04-05 11:06:10</div>
+				  <div class="col-md-2 child">登出时间</div>
+				  <div class="col-md-4">2017-04-05 11:06:10</div>
+			  </div>
+			  <div class="row">
+				  <div class="col-md-12">修改内容</div>
+			  </div>
+			  <div class="row">
+			  	  <div class="col-sm-6">
+			  	  	<div class="row">
+			  	  		<div class="col-xs-4 col-sm-4 child">电梯工号</div>
+						<div class="col-xs-8 col-sm-8 ">123456</div>
+			  	  	</div>  
+			  	  </div>
+			  	  <div class="col-sm-6">
+			  	  	<div class="row">
+			  	  		<div class="col-xs-4 col-sm-4 child">电梯工号</div>
+						<div class="col-xs-8 col-sm-8 ">567890</div>
+			  	  	</div>  
+			  	  </div>
+			 </div>
+        </form>
+      </div>
+      
+    </div><!-- /.modal-content -->
+  <!--</div> /.modal-dialog--> 
+<!--</div> /.modal--> 
+
+<!--查看详情弹框-->
+<div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModal1Label">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content modal-width">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h5 class="modal-title" id="myModal1Label">操作详情</h5>
+			</div>
+			<div class="modal-body height450">
+				<table class="table table-striped table-hover table-bordered"  align="center">
+					<thead>
+						<th width="70%">日志详情</th>
+						<th width="30%">操作时间</th>
+					</thead>
+					<tbody id="tbody1">
+						
+					</tbody>
+				</table>
+			</div>
+			<div class="modal-footer">
+				
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--获取列表模板-->
+<script id="tbodyInfo" type="text/x-handlebars-template">
+     {{#each this}}
+    <tr>
+        <td title="{{LoginName}}">{{LoginName}}</td>
+        <td title="{{LoginIp}}">{{LoginIp}}</td>
+        <td title="{{LoginCreateTimeView}}">{{LoginCreateTimeView}}</td>
+        <td title="{{LoginOuTimeStr}}">{{LoginOuTimeStr}}</td>
+        <td data-LoginId ="{{LoginId }}" data-LogUserId = "{{LogUserId}}"><span class="icon-icon_t_history" style="margin-left: 10px;" onclick="viewDetail(this)"></span></td>
+    </tr>
+    {{/each}}
+</script>
+
+<!--弹出详情框模板-->
+<script  id="tbodyInfo1" type="text/x-handlebars-template">
+	{{#each this}}
+	<tr>
+		<td>{{ElelogInfo}}</td>
+		<td>{{EleCreateTimeView}}</td>
+	</tr>
+	{{/each}}
+</script>
+
+<script>
+    var url=searchUrl=configSet+"/api/userinfo/getlogininfolist?pagesize="+pageSize+"&pagenum=1&inquire=&beginTime=&endTime="; 
+    $(function () {
+      getTableData(url);
+    })
+
+	/*数据获取*/
+	function getTableData(url) {
+      getData(url,function (Obj,pageNum) {  
+        tableData(Obj,$('#tbody'), $("#tbodyInfo"));
+        pageFun(pageNum);
+      })
+    }
+	
+	//查看详情
+	function viewDetail(obj){
+		var LoginId  = $(obj).parent().attr("data-LoginId");
+		var LogUserId = $(obj).parent().attr("data-LogUserId");
+		var url2=configSet+"/api/userinfo/getloginfobyids?userId="+LogUserId+"&loginId="+LoginId;
+		getData(url2,function (Obj,pagenum) {
+		    $("#myModal1").modal("show");
+		    if (Obj === '暂无数据！'){
+		      $("#tbody1").html('<tr><td colspan=\'10\' class=\'text-center\'>'+Obj+'</td></tr>');
+		    }else {
+		      var myTemplate = Handlebars.compile($("#tbodyInfo1").html());
+		      $("#tbody1").html(myTemplate(JSON.parse(Obj)));
+		    }
+		})
+	}
+	
+	//搜索
+	var searchValue = '';
+	var beginTime = '';
+	var endTime = '';
+	$(".searchBtn").on("click",function(){
+		searchValue = $.trim($(".search-wrap input").val());
+		beginTime = $("#start1").val();
+		endTime = $("#end1").val();
+		var searchUrl=configSet+"/api/userinfo/getlogininfolist?pagesize="+pageSize+"&pagenum=1&inquire="+searchValue+"&beginTime="+beginTime+"&endTime="+endTime; 
+		getData(searchUrl,function (Obj,pageNum) {  
+	        tableData(Obj,$('#tbody'), $("#tbodyInfo"));
+	        pageFun(pageNum);
+	    })
+	})
+
+	//分页
+	$(".pagination").on("click","a",function () {
+      $(this).parent().addClass("actived").siblings().removeClass("actived");
+	  var pagenum=parseInt($(this).text());
+	  var url3=searchUrl=configSet+"/api/userinfo/getlogininfolist?pagesize="+pageSize+"&pagenum="+pagenum+"&inquire="+searchValue+"&beginTime="+beginTime+"&endTime="+endTime;
+	  getData(url3,function (Obj) {
+	     tableData(Obj,$('#tbody'), $("#tbodyInfo"));
+	  })
+	})
+	
+	//日期
+	$(function(){
+		dataInit("#start1","#end1");	
+	})
+</script>

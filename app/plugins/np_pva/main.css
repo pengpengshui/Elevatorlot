@@ -1,0 +1,179 @@
+﻿body,div{
+font-size:12px;
+}
+.div_layout{
+background:url(images/panel_title.gif);
+border:1px solid #7F9DB9;
+text-align:center;
+
+}
+
+
+
+/*定义鼠标悬浮在链接上*/ 
+.div_layout:hover {  
+	background:url(images/btn_move.JPG);
+	cursor:pointer; 
+}  
+/*定义鼠标点击链接时*/ 
+.div_layout:active {  
+	background:url(images/button_click.JPG);
+	cursor:pointer; 
+}
+
+#logo {
+	position: absolute;
+	top: 6px;
+	left: 10px;
+	z-index: 20;
+	border: none;}
+
+#head	{ 
+	background-color:#F19956; 
+	border-top: 5px solid #EA6720;
+	width: 100%;
+	height: 30px;
+	color: #ff9900;
+	text-align: right;
+	padding-top:2px;
+	font-size: 12px;
+	filter: alpha(opacity=25, finishopacity=100, style=1,startx=0, startx=0, finishx=100%, finishy=100%);	
+}
+
+#sysname {
+	position: absolute;
+	top: 3px;
+	left: 120px;
+	font: italic 500 22px Verdana;
+	letter-spacing: -1px;
+	color: #F4B687;
+}
+#foot {
+
+	color: #EA6720;
+	background-color:#F5C097; 
+	border-top: 3px solid #D2E0F2;
+	border-bottom: 3px solid #F19956;	
+	width: 100%;
+	padding-top:3px;
+	text-align: right;
+	font-size: 12px;
+}
+
+/*定义正常链接*/ 
+.easyui-linkbutton:link{  
+ background-color:#F5F5F5;
+ color:#000000;  
+ text-decoration:none;  
+}  
+/*定义一方问过的链接*/ 
+.easyui-linkbutton:visited {  
+ background-color:#F5F5F5;
+ color:#000000;
+ text-decoration:none;  
+}  
+/*定义鼠标悬浮在链接上*/ 
+.easyui-linkbutton:hover {  
+ color:#ff0000;
+ text-decoration:none;  
+}  
+/*定义鼠标点击链接时*/ 
+.easyui-linkbutton:active {  
+ background-color:#F5F5F5;
+ color:#000000;
+ text-decoration:none;  
+}
+.td_layout{
+border:1px solid #e0ecff;
+background-color:#f0fcff;
+width:180px;
+}
+.td_layout1{
+padding:10px;
+}
+.table_layout_stateselect{
+border:1px solid #e0ecff;
+}
+.tab_layout{
+padding:10px;
+width:100%;
+height:100%;
+
+}
+
+.div_table{
+margin:10px;	
+}
+
+
+.pvgtrunkmap_layout{
+margin:10px;
+width:100px;
+height:50px;
+border:1px solid #000000;
+text-align:center;
+color:#0000ff;
+background-color:#ffffff;
+}
+
+.pvgtrunkmap_title{
+height:20px;
+background:#ccc;
+text-align:center;
+
+}
+.hr_color{
+width:0px;
+height:0px;
+position:absolute;
+
+}
+
+.txtclass{
+width:120px;	
+}
+.psdclass{
+width:120px;	
+}
+.selectclass{
+width:120px;	
+}
+
+.text_id{
+background-color:#f0f0f0;
+}
+
+/*视频联网拓扑图中的画板*/
+.div_map{
+position:relative;
+overflow:auto;
+padding:5px;
+width:2000px;
+height:1000px;	
+}
+
+.mask-file{
+	width: 100px;
+	height: 14px;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+}
+
+.file-wrap{
+	display: inline-block;
+	position: relative;
+}
+
+.mask-file-chrome{
+	width: 90px;
+	height: 14px;
+	/*position: absolute;
+	top: 0px;
+	left: 0px;*/
+}
+
+.file-wrap-chrome{
+	display: inline-block;
+/*	position: relative;*/
+}

@@ -1,0 +1,74 @@
+
+<html>  
+    <head>  
+		<title>OpenLayers example</title>  
+		<link rel="stylesheet" href="ol.css" type="text/css">
+		<script src="ol.js" type="text/javascript"></script>
+		<script type="text/javascript">    
+		function zeroPad(num, len, radix) 
+		{
+			var str = num.toString(radix || 10).toLocaleUpperCase();
+			while (str.length < len) 
+			{
+				str = "0" + str;
+			}
+			return str;
+		}
+		
+		function init()
+		{  
+			var projection = new ol.proj.Projection({  
+                code: 'EPSG:4326',  
+                units: 'degrees'  
+            });
+			var firstlayer = new ol.layer.Tile({   
+											source: new ol.source.TileWMS({  
+												url:'http://172.16.1.19:8085/geoserver/postgis_china/wms',  
+												params: { 
+													'TILED': true,  
+													'LAYERS': 'postgis_china:china',  
+												},
+												serverType:'geoserver'
+											})  
+			});
+			var secondlayer = new ol.layer.Tile({
+											source: new ol.source.XYZ({
+												tileUrlFunction: function (tileCoord) {
+													var x = 'C' + zeroPad(tileCoord[1], 8, 16);
+													var y = 'R' + zeroPad(-tileCoord[2] - 1, 8, 16);
+													var z = 'L' + zeroPad(tileCoord[0], 2, 10);
+													return 'http://172.16.1.19:8085/v101/Layers/_alllayers/' + z + '/' + y + '/' + x + '.png';
+												}
+											})
+			});
+            var map = new ol.Map({  
+                target: 'map',  
+                layers: [  
+					secondlayer,
+					<!-- firstlayer -->
+                ],  
+                view: new ol.View({  
+					<!-- ����ϵ -->
+					<!-- projection: 'EPSG:4326',   -->
+					<!-- ��ת�Ƕ� -->
+                    <!-- rotation: Math.PI / 6,  -->
+					center: ol.proj.fromLonLat([116.41, 39.82]),
+					zoom: 15,
+					minZoom: 4,
+					maxZoom: 20
+                })  
+            });  
+			// ����singleclick�¼�
+			map.on('singleclick', function(event){
+			// ͨ��getEventCoordinate������ȡ����λ�ã���ת��Ϊwgs84���꣬�������Ի�����ʾ
+			alert(ol.proj.transform(event.coordinate, 'EPSG:3857', 'EPSG:4326'));
+			
+			})
+        }  
+		
+		</script>  
+		</head>  
+	<body onload="init()">  
+		<div id="map" class="map"></div>  
+	</body>  
+</html>  

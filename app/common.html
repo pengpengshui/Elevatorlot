@@ -1,0 +1,549 @@
+<!doctype html>
+<html lang="">
+  <head>
+    <meta charset="utf-8">
+    <meta name="description" content="">
+   <!-- <meta name="viewport" content="width=device-width, initial-scale=1">-->
+    <title>电梯监控平台</title>
+
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <!-- Place favicon.ico in the root directory -->
+
+    <!-- build:css styles/vendor.css -->
+    <!-- bower:css -->
+    <!-- endbower -->
+    <!-- endbuild -->
+<script>
+  var usid=sessionStorage.usid;
+  if ( !usid){
+/*    alert("你还没登录");*/
+    window.location.href="index.html"
+  }
+</script>
+    <!-- build:css styles/main.css -->
+    <link rel="stylesheet" href="plugins/customScroller/jquery.mCustomScrollbar.min.css">
+    <link rel='stylesheet' href='plugins/fullcalendar-3.4.0/fullcalendar.css' />
+    <link rel="stylesheet" href="plugins/maps/ol.css" type="text/css">
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- endbuild -->
+  </head>
+  <body>
+    <!--[if IE]>
+      <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <div class="overflowH fullScreen">
+        <div class="col-md-2 sideNav" id="sideNav" data-mcs-theme="dark">
+          <div class="logo"><img src="images/logo.png"></div>
+        </div>
+        <div class="col-md-10 sideRight" style="height: 100%;">
+          <div class="row" style="position: relative;height: 100%;">
+            <div class="rightHeader">
+              <div class="pull-left">
+                <i class="icon-icon_menu menuIcon"></i>
+              </div>
+              <div class="pull-right">
+                <div class="inlineBlock realInfo">
+                  <button type="button" class="btn btn-default" onclick="allRealInfo()"><i class="icon-icon_sign_all lightPurple"></i>全部<span>无</span></button>
+                  <button type="button" class="btn btn-default" onclick="zcRealInfo()"><i class="icon-icon_sign_normal lightGreen"></i>正常<span>无</span></button>
+                  <button type="button" class="btn btn-default" onclick="gzRealInfo()"><i class="icon-icon_sign_guz lightRed"></i>故障<span>无</span></button>
+                <!--  <button type="button" class="btn btn-default" onclick="jxRealInfo()"><i class="icon-icon_sign_jianx lightYellow"></i><span></span></button>-->
+                  <button type="button" class="btn btn-default" onclick="lxRealInfo()"><i class="icon-icon_sign_outline lightBlack"></i>离线<span>无</span></button>
+                </div>
+                <img src="../images/profile.png" style="margin-left: 15px;">
+                <div class="profile inlineBlock dropdown">
+                  <div data-toggle="dropdown"  id="dropdownMenu1"aria-haspopup="true" aria-expanded="false">
+                    <span id="username"></span></div>
+               <!--   <span class="quit"><i class="icon-icon_exit" ></i></span>-->
+                   <ul class="dropdown-menu profileDropdown" aria-labelledby="dropdownMenu1">
+                      <li data-toggle="modal" onclick="ownInfoFun()"><i class="icon-icon_system lightGreen" ></i>个人信息</li>
+                      <li data-toggle="modal" onclick="editFun()"><i class="icon-icon_edit lightGreen" ></i>修改密码</li>
+
+                    </ul>
+
+                </div>
+                <span onclick="quitFun()" style="margin-right: 12px;"><i class="icon-icon_exit lightRed" ></i></span>
+              </div>
+            </div>
+            <input id="hiddenCommonValue" value="小区id " hidden>
+            <input id="elevatorReal" data-real="" value="real" hidden>;
+            <!--保存当前的页面-->
+            <input id="currentPage" hidden>
+            <div class="clearfix rightContent">
+
+            </div>
+          </div>
+      </div>
+    </div>
+    <!-- 修改密码Modal -->
+    <div class="modal fade" id="editPassword" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content modal-minWidth">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">修改密码</h4>
+          </div>
+          <div class="modal-body modelStyle">
+            <form id="addFormPass">
+              <div class="row ">
+                <div class="col-md-3 child"><strong>*</strong>原密码：</div>
+                <div class="col-md-9"><input name="UserPwd" class="form-control oldPwd" type="password" /></div>
+              </div>
+              <div class="row ">
+                <div class="col-md-3 child"><strong>*</strong>新密码：</div>
+                <div class="col-md-9"><input name="NewUserPwd" class="form-control newUserPwd" type="password" /></div>
+              </div>
+              <div class="row ">
+                <div class="col-md-3 child"><strong>*</strong>确认密码：</div>
+                <div class="col-md-9"><input class="form-control sureNewUserPwd" type="password" /></div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <label id="prompts"></label>
+            <button type="button" class="btn btn-default cancel" data-dismiss="modal">取消</button>
+            <button type="button" class="btn btn-primary" onclick="surePwdBtn()">确定</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 个人信息-->
+    <div class="modal fade" id="ownInfo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content modal-minWidth">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="">个人信息</h4>
+          </div>
+          <div class="modal-body modelStyle">
+            <form id="ownInfoForm">
+              <div class="row ">
+                <div class="col-md-3 child"><strong>*</strong>用户名：</div>
+                <div class="col-md-9"><span id="userNameSpan"></span></div>
+              </div>
+              <div class="row ">
+                <div class="col-md-3 child"><strong>*</strong>手机号：</div>
+                <div class="col-md-9"><span id="phoneNumSpan"></span><input name="UserPhone" class="form-control" type="text" id="phoneNumber" style="display: none;" />
+                  <i class="icon-icon_edit phoneEditIcon" onclick="phoneNumEdit()"></i></div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <label id="prompts1"></label>
+            <button type="button" class="btn btn-default cancel" data-dismiss="modal">取消</button>
+            <button type="button" class="btn btn-primary" onclick="surePhoneBtn()">确定</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--退出提示-->
+    <div class="modal fade bs-example-modal-sm" id="quitModel" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+      <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content modal-exWidth">
+          <div class="modal-body">
+            <p class="text-center"><i class="icon-icon_jc_2_on  lightYellow"></i>退出成功！</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--删除提示-->
+    <div class="modal fade bs-example-modal-sm" id="deleteDataModel" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+      <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content modal-exWidth">
+          <div class="modal-body">
+            <p class="text-center" id="tipsCon"><i class="icon-icon_jc_2_on  lightYellow"></i>删除成功！</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+    <script>
+      (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+      function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+      e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+      e.src='https://www.google-analytics.com/analytics.js';
+      r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+      ga('create','UA-XXXXX-X');ga('send','pageview');
+    </script>
+
+    <!-- build:js scripts/vendor.js -->
+    <!-- bower:js -->
+    <script src="/bower_components/jquery/dist/jquery.js"></script>
+    <script src="/bower_components/handlebars/handlebars.js"></script>
+    <!-- endbower -->
+    <!-- endbuild -->
+
+    <!-- build:js scripts/plugins.js -->
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/affix.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/alert.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/dropdown.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/tooltip.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/modal.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/transition.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/button.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/popover.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/carousel.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/scrollspy.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/collapse.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/tab.js"></script>
+    <!-- endbuild -->
+
+    <!-- build:js scripts/main.js -->
+    <script src="plugins/laydate/laydate.js"></script>
+<!--    <script src="plugins/icheck/icheck.js"></script>
+    <script src="plugins/echarts.simple.min.js"></script>
+    <script src="plugins/echarts.simple.min.js"></script>-->
+
+    <script src="plugins/maps/ol.js" type="text/javascript"></script>
+    <script src="plugins/customScroller/jquery.mCustomScrollbar.concat.min.js" type="text/javascript"></script>
+    <script src="plugins/echarts.min.js" type="text/javascript"></script>
+
+    <script src='plugins/fullcalendar-3.4.0/lib/moment.min.js'></script>
+    <script src='plugins/fullcalendar-3.4.0/fullcalendar.js'></script>
+    <script src="scripts/main.js"></script>
+    <!-- endbuild -->
+
+  <!--leftside Nav data show-->
+  <script id="sideNav-template" type="text/x-handlebars-template">
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true" >
+      {{#each this}}
+      <div class="panel panel-default" >
+        <div class="panel-heading" role="tab" id="heading{{addId @index}}">
+          <h5 class="panel-title">
+            {{#if url}}
+              <a role="button" data-url="{{url}}"  class="navList" >
+                <span><i class="{{icon}}"></i>{{name}}</span>
+              </a>
+            {{else}}
+              <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse{{addId @index}}" aria-expanded="true" aria-controls="collapse{{addId @index}}" >
+                <span><i class="{{icon}}"></i>{{name}}</span>
+              </a>
+            {{/if}}
+          </h5>
+        </div>
+        {{#if children}}
+        <div id="collapse{{addId @index}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading{{addId @index}}">
+          <ul class="list-group">
+            {{#each children}}
+            <li class="list-group-item navList" data-url="{{url}}"><a href="#"><span><i class="{{icon}}"></i>{{name}}</span></a></li>
+            {{/each}}
+          </ul>
+        </div>
+        {{/if}}
+      </div>
+       {{/each}}
+    </div>
+  </script>
+  <script type="text/javascript">
+
+
+    var navData=
+        [
+          {"name":"首页","icon":"icon-icon_home","url":"index/index.html"},
+          {"name":"监控管理","icon":"icon-icon_jiank",
+            "children":[
+                {"name":"实时数据监测","icon":"icon-icon_t_shuj","url":"monitoringManagement/estateDescribe.html"},
+                {"name":"实时视频监测","icon":" icon-icon_t_video","url":"monitoringManagement/realVideoDetection.html"}
+              ]},
+          {"name":"事件管理","icon":"icon-icon_shij",
+            "children": [
+              {"name":"历史事件查询","icon":"icon-icon_t_history","url":"incidentManagement/historySearch.html"},
+              {"name":"故障统计","icon":" icon-icon_t_guz","url":"incidentManagement/faultCount.html"}
+               ]},
+          {"name":"维保管理","icon":"icon-icon_weib",
+            "children": [
+              {"name":"维保记录","icon":"icon-icon_t_baoy","url":"maintenanceManagement/maintenanceRecord.html"},
+              {"name":"维保统计","icon":" icon-icon_t_weib","url":"maintenanceManagement/maintenanceCount.html"}
+              ]},
+          {"name":"档案管理","icon":"icon-icon_t_chanq",
+            "children":[
+              {"name":"小区管理","icon":"icon-icon_danw","url":"archivesManagement/communityManage.html"},
+              {"name":"楼宇管理","icon":"icon-icon_jc_6_on","url":"archivesManagement/buildManage.html"},
+              {"name":"电梯信息管理","icon":"icon-icon_t_diant","url":"archivesManagement/elevatorInfo.html"}
+              ]},
+          {"name":"单位管理","icon":"icon-icon_t_loup",
+            "children":[
+            	/*{"name":"安装单位管理","icon":"icon-icon_t_setup","url":"UnitManagement/installationUnit.html"},*/
+              {"name":"维保单位管理","icon":" icon-icon_t_weibdw","url":"UnitManagement/maintenanceUnit.html"},
+              {"name":"产权单位管理","icon":" icon-icon_t_chanq","url":"UnitManagement/propertyUnit.html"},
+              {"name":"使用单位管理","icon":"icon-icon_t_shiy","url":"UnitManagement/userUnit.html"},
+              {"name":"物业单位管理","icon":" icon-icon_t_wuy","url":"UnitManagement/tenement.html"},
+              {"name":"制造厂商管理","icon":"icon-icon_t_zhizs","url":"UnitManagement/manufacturer.html"}
+              ]},
+          {"name":"系统管理","icon":"icon-icon_login_user",
+            "children": [
+              {"name":"系统人员信息","icon":"icon-icon_t_userlogin","url":"systemManagement/sysPeople.html"},
+              {"name":"维保人员信息","icon":"icon-icon_system","url":"systemManagement/mainPeople.html"},
+              {"name":"用户登录日志","icon":"icon-icon_t_usercz","url":"systemManagement/userLoginLog.html"}
+              ]}
+      ]
+
+    $(function () {
+      /*$(".sideNav").mCustomScrollbar({
+        setHeight:675,
+        theme:"minimal-dark"
+      });*/
+
+      $("#username").html(sessionStorage.username);
+      loginer=sessionStorage.username;
+
+      var myTemplate = Handlebars.compile($("#sideNav-template").html());
+      Handlebars.registerHelper("addId",function (index,options) {
+        return parseInt(index)+1;
+      })
+      $('.sideNav').append(myTemplate(navData));
+      //permission问题
+      var permissionLevel=sessionStorage.permission;
+      if(permissionLevel == "2"){
+        $("#accordion > div").eq(6).find(".navList").first().hide();
+      }
+      if (permissionLevel == "3"){
+        $("#accordion >div").eq(4).hide()
+        $("#accordion >div").eq(5).hide()
+        $("#accordion >div").eq(6).find(".navList").first().hide()
+        $("#accordion >div").eq(6).find(".navList").last().hide()
+      }
+
+      var rightContent=$(".rightContent");
+      $.ajax({
+        url: 'views/index/index.html',
+        context: rightContent,
+        success: function(data){
+          $(this).html(data);
+        }});
+
+      // nav 切换
+        $(".navList").click(function () {
+          if($(this).attr("data-url")){
+            $(".navList span").removeClass("actived")
+            $(this).find("span").addClass("actived")
+            var url=$(this).attr("data-url");
+            rightContent.empty();
+
+            $.ajax({
+              url: 'views/'+url,
+              context: rightContent,
+              success: function(data){
+                $("#currentPage").attr("data-pageurl",'views/'+url)
+                socket1.close();
+                //console.log('断开前一个.');
+                $(this).html(data);
+              }});
+          }
+      })
+    })
+
+    //滚动条
+
+     /* $(window).on("load",function(){
+        $("#sideNav").mCustomScrollbar({
+          theme:"minimal"
+        });
+      })*/
+      setTimeout(function () {
+        $("#sideNav").mCustomScrollbar({
+          theme:"minimal"
+        });
+      },500)
+
+
+    var url3="";
+    var url4="";
+    var loginer1=sessionStorage.username;
+    $.getJSON('config.json',function (data) {
+      configSet=data.configSet;
+      socktUrl=data.socktUrl;
+      lunXunSeconds=data.lunXunSeconds;
+
+      url3=configSet+"/api/login/userloginout?loginId="+sessionStorage.usid;
+      url4=configSet+"/api/login/userupdatepwd";
+      //websocket建立连接
+      socket=createSocket(socktUrl+'/EleRealStatus');
+      //
+      socket.onmessage=function (e) {
+        var data=JSON.parse(e.data);
+        console.log("commonhead部分是实时信息:",data);
+        $(".realInfo button").eq(0).find("span").html(data.Obj.TotalCount);
+        $(".realInfo button").eq(1).find("span").html(data.Obj.RealSignal);
+        $(".realInfo button").eq(2).find("span").html(data.Obj.RealFault);
+    /*    $(".realInfo button").eq(3).find("span").text("检修"+data.Obj.RealOverhaul);*/
+        $(".realInfo button").eq(3).find("span").html(data.Obj.Offline);
+      }
+    })
+
+    //退出
+    function quitFun() {
+      getData(url3,function (data) {
+        if ($("#win_pixwin").length){
+          $("#win_pixwin").css("height",0);
+        }
+        $("#quitModel").modal("show");
+        setTimeout(function () {
+          $("#quitModel").modal("hide");
+          window.location.href="index.html";
+          sessionStorage.clear();
+        },1000)
+
+      })
+    }
+
+    //个人信息弹层
+    function ownInfoFun() {
+      var urlownInfo=configSet+"/api/login/getuserinfobyusername?userName="+sessionStorage.username;
+      getData(urlownInfo,function (data) {
+        //console.log(data);
+        var Obj=JSON.parse(data);
+        $("#userNameSpan").html(Obj.UserName);
+        $("#phoneNumSpan").html(Obj.UserPhone);
+      })
+      $("#ownInfo").modal("show");
+      if ($("#win_pixwin").length){
+        $("#win_pixwin").css("height",0);
+      }
+      $("#prompts1").html("");
+      $("#phoneNumSpan").show();
+      $("#phoneNumber").hide();
+    }
+    
+    //修改手机号码
+    function phoneNumEdit() {
+      $("#phoneNumSpan").hide();
+      $("#phoneNumber").val("").show(200);
+
+    }
+    function surePhoneBtn() {
+      var $phoneNum=$("#phoneNumber");
+      if ($phoneNum.css("display") =="none"){
+        $("#ownInfo").modal("hide");
+        return false;
+      }else{
+        if($phoneNum.val() == ""){
+          $("#prompts1").html("手机号不能为空!");
+          return false;
+        }
+        if(!phoneNumber.test($phoneNum.val())){
+          $("#prompts1").html("手机号格式错误!");
+          //phoneNum.focus();
+          return false;
+        }
+        $("#phoneNumSpan").show();
+        $phoneNum.hide();
+        $("#phoneNumSpan").html($phoneNum.val());
+        $("#prompts1").html("");
+        var urlPhoneEdit=configSet+"/api/login/updateuserinfo";
+        var phoneNum=$("#phoneNumSpan").html();
+        var usename=$("#userNameSpan").html();
+        var formse = JSON.stringify({"UserName":usename,"UserPhone":phoneNum})
+        postData(urlPhoneEdit,formse,function (data) {
+          $("#ownInfo").modal("hide");
+          if ($("#win_pixwin").length){
+            $("#win_pixwin").css("height",0);
+          }
+        })
+      }
+
+    }
+    
+    //弹出修改密码的弹层
+    function editFun() {
+      $("#editPassword").modal("show");
+      /*alert($("#win_pixwin").length) ;*/
+      if ($("#win_pixwin").length){
+        $("#win_pixwin").css("height",0);
+      }
+      //添加一个遮罩
+      //$("#modalWrap").append(' <iframe id="iframe1" src="about:blank" frameBorder="0" marginHeight="0" marginWidth="0" style="position:absolute; visibility:inherit; top:0px;left:0px;width:100%; height:100%;z-index:-1; opacity: 0;"></iframe>');
+      $("#prompts").html("");
+      $("#addFormPass")[0].reset();
+    }
+
+    //修改密码提交事件
+    function surePwdBtn() {
+      //先判断新旧密码是否相同
+      if($(".oldPwd").val() != $(".newUserPwd").val()){
+        //再判断新密码与确认密码是否相同
+        if($(".sureNewUserPwd").val() === $(".newUserPwd").val()){
+          var formse=$("#addFormPass").serializeObject();
+          formse.LogUserId =sessionStorage.usid;
+          var bol=required(addFormPass.length,addFormPass);
+          if(bol){
+            $("#prompts").html("");
+            postData(url4,JSON.stringify(formse),function () {
+              $("#editPassword").modal("hide");
+            });
+          }
+        }
+        else {
+          $("#prompts").html("新密码与确认密码不一致！")
+        }
+      }else {
+        $("#prompts").html("新密码与旧密码重复，请重新设置新密码！")
+      }
+    }
+
+    $(".close,.cancel").click(function () {
+      if ($("#win_pixwin").length){
+        $("#win_pixwin").css("height","100%");
+      }
+      $("#editPassword").modal("hide");
+    })
+
+    //实时信息点击事件
+    function allRealInfo() {
+      tiaozhuan("TotalCount");
+    }
+    function zcRealInfo() {
+      tiaozhuan("RealSignal");
+    }
+    function gzRealInfo() {
+      tiaozhuan("RealFault");
+    }
+    function jxRealInfo() {
+      tiaozhuan("RealOverhaul")
+    }
+    function lxRealInfo() {
+      //$("#elevatorReal").attr("data-real","Offline")
+      tiaozhuan("Offline")
+    }
+    function tiaozhuan(data1){
+      $("#elevatorReal").attr("data-real",data1);
+      var rightContent=$(".rightContent");
+    $.ajax({
+      url: 'views/elevatorRealInfo/realDataDetection.html',
+      context: rightContent,
+      success: function(data){
+        socket1.close();
+        $(this).html(data);
+      }});
+    }
+
+    //左侧菜单栏的伸缩
+    var slideIn=false;
+    var map=null;
+    $(".menuIcon").click(function () {
+      if (!slideIn){
+        $(this).addClass("actived");
+        $(".sideNav").animate({"width":0},500);
+              $(".sideRight").animate({"width":"100%"},500);
+        slideIn=true;
+        if (map){
+          setTimeout(function(){mapResize();},500)
+        }
+      }else {
+        $(".sideRight").animate({"width":"83.3333333333%"},500);
+        $(".sideNav").animate({"width":"16.6666666667%"},500);
+        $(this).removeClass("actived");
+
+        slideIn=false;
+        if (map){
+          setTimeout(function(){mapResize();},500)
+        }
+      }
+
+    })
+
+  </script>
+  </body>
+</html>

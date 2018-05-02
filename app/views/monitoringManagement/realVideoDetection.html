@@ -1,0 +1,291 @@
+
+<div class="mainwrap">
+    <div class="header"><span>监控管理</span>><span>实时视频监测</span></div>
+    <div class="main-choose-list overflowH">
+        <!--搜索-->
+        <select class="form-control lunxunChange" style="width: 100px;" >
+            <option value="1">轮播</option>
+            <option value="0">不轮播</option>
+        </select>
+
+        <select class="form-control secondsChange" style="width: 100px;" >
+            <option value="5000">5s</option>
+            <option selected  value="10000">10s</option>
+            <option value="15000">15s</option>
+            <option value="20000">20s</option>
+            <option value="30000">30s</option>
+        </select>
+        <div class="videoScreens inlineBlock">
+          <!--  <i class="icon-icon-1 oneScreen "></i>-->
+            <i class="icon-icon-4 fourScreen "></i>
+            <i class="icon-icon-9 nineScreen "></i>
+        </div>
+
+    </div>
+    <div class="main">
+        <div class="realLeftCon">
+            <div id="win_pixwin" style="height:99%">
+
+            </div>
+        </div>
+        <div class="realRightCon ">
+            <table class="table table-striped table-condensed table-bordered">
+                <thead>
+                    <th width="40">序号</th>
+                    <th width="130">电梯名称</th>
+                    <th>详细地址</th>
+                </thead>
+                <tbody class="lunxunInfo"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="warningDiv">
+    <a class='closeBtnAll'>&times;</a>
+    <div class="warningInf"></div>
+  <!--  <div>
+    <div><label>故障信息:</label><span>们去外听题规章，想家想有人</span></div>
+    <label>电梯工号:</label><span>被删还你樱花树被删还你樱花树</span>
+    <label>负责人电话:</label><span>被删还你樱花树被删还你樱花树被删还你樱花树</span>
+    <label>物业电话:</label><span>被删还你樱花树</span>
+    <label>详细地址:</label><span>被删还你樱花树被删还你樱花树被删还你樱花树被删还你樱花树</span>
+    </div>-->
+</div>
+
+<script>
+
+    /*获取摄像头列表*/
+    var url=configSet+"/api/realtimeinfo/getrealcamerainfo?userName="+loginer;
+
+    //获取数据
+    $(function () {
+      getTableData(url);
+    })
+var numberCount=0;
+    /*数据获取*/
+    var camerasJson;
+    function getTableData(url) {
+      getData(url,function (Obj,pageNum) {
+        camerasJson=JSON.parse(Obj);
+
+        pvaFun(function () {
+          screenNum=4;
+          $(".fourScreen").addClass("actived").siblings().removeClass("actived");
+          btn_win_four_click();
+          win_beforeunload_main();
+          Lunxun(seconds,screenNum);
+
+        })
+        console.log("camerasJson：",camerasJson)
+      })
+    }
+
+    //警告信息
+    var socket=createSocket(socktUrl+"/RealCameraInfo");
+    socket1 = socket;
+      socket.onopen=function () {
+      socket.send(loginer);
+    }
+     
+    socket.onmessage=function (e) {
+      $(".warningDiv div").empty();
+      var data = JSON.parse(e.data);
+      console.log("warnInf:",data);
+      if (data.Msg === "RealCameraInfo") {
+        $(".closeBtn").show();
+        var obj=data.Obj;
+        var html=" ";
+        for (var i=0;i<obj.length;i++){
+          html+="<div>"+
+              "<a class='closeBtn'>&times;</a>"+
+              "<div><label>故障信息</label><span>"+obj[i].AbnDetailInfo+"</span></div><table class='table-bordered'>"+
+              "<tr><td>电梯名称</td><td>"+obj[i].EleJobNo+"</td></tr>"+
+              "<tr><td>负责人电话</td><td>"+obj[i].MainPrincipalPhone+"</td></tr>"+
+              "<tr><td>物业电话</td><td>"+obj[i].ProUninPhone+"</td></tr>"+
+              "<tr><td>详细地址</td><td>"+obj[i].DisAddress+"</td></tr>"+
+              "</table></div>"
+        }
+        $(".closeBtnAll").show();
+        $(".warningDiv div").prepend(html);
+      }
+    }
+
+    //警告信息的关闭按钮
+    $(".closeBtnAll").click(function () {
+      $(this).next().children().remove();
+      $(this).hide();
+    })
+    $(".warningDiv").on("click",".closeBtn",function () {
+      $(this).parent().remove();
+    })
+
+
+    var isLunxXun=1,//默认是轮播状态，轮播时常是5s,四分屏轮播
+        seconds=10000,
+        screenNum=4;
+    //默认设置为轮询，时长为20s,一分屏轮询。
+
+   /* $(".oneScreen").click(function () {
+        screenNum=1;
+        $(this).addClass("actived").siblings().removeClass("actived");
+        if (isLunxXun){
+          clearInterval(lunxunInterval);
+        }
+
+        btn_win_one_click();
+       /!* win_beforeunload_main();*!/
+      if (isLunxXun){
+        Lunxun(seconds,screenNum);}
+    })*/
+    $(".fourScreen").click(function () {
+      screenNum=4;
+      $(this).addClass("actived").siblings().removeClass("actived");
+      if (isLunxXun){
+        clearInterval(lunxunInterval);
+      }
+      btn_win_four_click();
+     /* win_beforeunload_main();*/
+      if (isLunxXun){
+        Lunxun(seconds,screenNum);
+      }
+    })
+    $(".nineScreen").click(function () {
+      screenNum=9;
+      $(this).addClass("actived").siblings().removeClass("actived");
+      if (isLunxXun){
+        clearInterval(lunxunInterval);
+      }
+      btn_win_nine_click();
+      /*win_beforeunload_main();*/
+      if (isLunxXun){
+        Lunxun(seconds,screenNum);
+      }
+    })
+
+
+    $(".lunxunChange").change(function () {
+      isLunxXun= parseInt($(this).find("option:selected").val());
+     /*   console.log("islunx",typeof isLunxXun)*/
+        if (isLunxXun){
+          console.log(11)
+          $(".secondsChange").removeAttr("disabled");
+           Lunxun(seconds,screenNum);
+        /*   alert(isLunxXun)*/
+        }else {
+          console.log(22)
+          $(".secondsChange").attr("disabled","disabled");
+           clearInterval(lunxunInterval); //清空后是否继续出现。
+         }
+     })
+    $(".secondsChange").change(function () {
+      seconds=$(this).find("option:selected").val();
+      clearInterval(lunxunInterval); //要判断是否clear后还会继续setinterval
+     /* win_beforeunload_main()*/
+      if (isLunxXun){
+        Lunxun(seconds,screenNum);
+      }
+    })
+
+//分屏轮循的点击事件
+function Lunxun(seconds,num) {
+      console.log("十四数据的秒数",seconds);
+  console.log("seconds",seconds);
+  var lunxunInfo=$('.lunxunInfo');
+  win_hwnd_init();
+  win_beforeunload_main();
+  var count  = 0; //counter 设置分屏个数
+  var counter = 0; //counter 设置分屏个数
+  var liLengths = camerasJson.length;
+  console.log("camerasJosn",liLengths);
+  var lastLi = 0;
+
+  //lastLi=lastLi > liLengths ? (liLengths-1) : lastLi
+
+  // 当摄像机个数少于等于9个时，
+  if (liLengths <= num) {
+    lunxunInfo.empty();
+    for (var i = 0; i < liLengths; i++) {
+      var stream = {
+        "displayMode": 0,
+        "hwdecoder": 1,
+        "ip": camerasJson[i].ChannelIp,
+        "passwd": camerasJson[i].ChannelPwd,
+        "port": camerasJson[i].ChannelPort,
+        "type": 1,
+        "user": camerasJson[i].PvgUserName,
+        "path":camerasJson[i].ChannelPath
+      }
+        /*var index = GetUsefulIndex();*/
+      playstreamEx(i, stream);
+      lunxunInfo.append('<tr><td>'+(i+1)+'</td><td style="max-width:140px;word-break:break-all;" title='+camerasJson[i].EleJobNo+'>'+camerasJson[i].EleJobNo+'</td><td title='+camerasJson[i].EleAddress+'>'+camerasJson[i].EleAddress+'</td></tr>')
+    }
+
+    // console.log("shaoyu 9 ge ")
+  } else {
+    // 当摄像机个数大于9个时，
+    //先显示9个
+    count++;
+    lastLi = num * count;
+    counter = 0;
+    win_beforeunload_main();
+    lunxunInfo.empty();
+    for (var i = (count * num - num); i < lastLi; i++) {
+      var stream = {
+        "displayMode": 0,
+        "hwdecoder": 1,
+        "ip": camerasJson[i].ChannelIp,
+        "passwd": camerasJson[i].ChannelPwd,
+        "port": camerasJson[i].ChannelPort,
+        "type": 1,
+        "user": camerasJson[i].PvgUserName,
+        "path":camerasJson[i].ChannelPath
+      }
+      console.log("视频轮询界面：",stream)
+      playstreamEx(counter, stream);
+      counter++;
+
+      lunxunInfo.append('<tr><td>'+(i+1)+'</td><td style="max-width:140px;word-break:break-all;" title='+camerasJson[i].EleJobNo+'>'+camerasJson[i].EleJobNo+'</td><td title='+camerasJson[i].EleAddress+'>'+camerasJson[i].EleAddress+'</td></tr>')
+    }
+    //开始轮询
+    lunxunInterval=setInterval(function () {
+      win_beforeunload_main() //清屏
+      count++;
+      lastLi = num * count;
+      counter = 0;
+      if (lastLi > liLengths) {
+        lastLi = liLengths ;
+      }
+      lunxunInfo.empty();
+      for (var i = (count * num - num); i < lastLi; i++) {
+        var stream = {
+          "displayMode": 0,
+          "hwdecoder": 1,
+          "ip": camerasJson[i].ChannelIp,
+          "passwd": camerasJson[i].ChannelPwd,
+          "port": camerasJson[i].ChannelPort,
+          "type": 1,
+          "user": camerasJson[i].PvgUserName,
+          "path":camerasJson[i].ChannelPath
+        }
+        //stream["path"]=camerasJson[i].path;
+        console.log(camerasJson[i].ChannelPath)
+        playstreamEx(counter, stream);
+        counter++;
+        lunxunInfo.append('<tr><td>'+(i+1)+'</td><td style="max-width:140px;word-break:break-all;" title='+camerasJson[i].EleJobNo+'>'+camerasJson[i].EleJobNo+'</td><td title='+camerasJson[i].EleAddress+'>'+camerasJson[i].EleAddress+'</td></tr>')
+      }
+      //console.log("dayu 9 ge ")
+      if (lastLi == liLengths) {
+        count = 0;
+      }
+      numberCount++;
+      console.log("numberCount:",numberCount);
+    }, seconds)
+
+  }
+}
+
+/*    window.onbeforeunload=function () {
+      clearInterval(lunxunInterval);
+    }*/
+</script>

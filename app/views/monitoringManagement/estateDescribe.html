@@ -1,0 +1,68 @@
+
+<div class="mainwrap">
+    <div class="header"><span>监控管理</span>><span>实时数据监测</span></div>
+
+    <div class="main estates">
+        <div class="row">
+
+        </div>
+    </div>
+</div>
+<script id="estatesHandler" type="text/x-handlebars-template">
+    {{#each this}}
+    <div class="col-md-4 estatesDiv" data-disId="{{DisId}}" onclick="elevatorInfFun(this)">
+        <img src="../../images/timg.jpg">
+        <div class="estateInfo">
+            <span title="{{DisName}}&nbsp;&nbsp;&nbsp;{{DisAddress}}">{{DisName}}&nbsp;&nbsp;{{DisAddress}}</span>
+        </div>
+
+        <span class="">
+                {{#if RealFault}}
+                <i class="icon-icon_sign_guz lightRed" title='故障'> {{RealFault}}</i>
+                {{/if}}
+                {{#if Offline}}
+                <i class="icon-icon_sign_outline lightBlack" title='离线'> {{Offline}}</i>
+                {{/if}}
+                {{#if RealSignal}}
+                <i class="icon-icon_sign_normal lightGreen" title='正常'> {{RealSignal}}</i>
+                {{/if}}
+            </span>
+    </div>
+    {{/each}}
+</script>
+<script>
+
+  var socket = createSocket(socktUrl + '/DisRealStatus');
+  socket1 = socket;
+  var myTemplate = Handlebars.compile($("#estatesHandler").html());
+  socket.onopen=function () {
+      socket.send(loginer);
+    }
+     
+  socket.onmessage = function (e) {
+    var data = JSON.parse(e.data);
+    console.log("小区实时数据", data)
+    if (data.Msg === "DisRealStatus") {
+      $('.estates .row').html(myTemplate(data.Obj));
+    }
+  }
+  socket.onclose = function () {
+
+  }
+  //点击图片的事件
+  var rightContent = $(".rightContent");
+  /*$(".estatesDiv").click(function () {*/
+  function elevatorInfFun(obj) {
+    $("#hiddenCommonValue").attr("disId", $(obj).attr("data-disId"));
+    $.ajax({
+      url: 'views/monitoringManagement/realDataDetection.html?uid=1',
+      context: rightContent,
+      success: function (data) {
+        socket1.close();
+        //console.log('断开前一个.');
+        $(this).html(data);
+      }
+    });
+  }
+
+</script>

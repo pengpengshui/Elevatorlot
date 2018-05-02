@@ -1,0 +1,395 @@
+
+<div class="mainwrap" style="height: 100%;">
+    <div class="main" style="margin-top: 0;height: 100%;">
+        <div class="realLeftCon1 indexCon">
+            <ul class="elevatorList"><li></li></ul>
+            <div id="map" class="map"></div>
+            <div id="popup" class="ol-popup">
+                <div id="popup-content"></div>
+            </div>
+            <div class="backMap" title="返回全地图" onclick="backMap()"><i class="icon-icon_jc_11_on"></i></div>
+        </div>
+        <div class="realRightCon realRightCon1 indexCon hide">
+            <div class="flexibleBox">
+                <i class="icon-icon_right"></i>
+            </div>
+            <div style="overflow: hidden;height:225px;">
+                <div id="win_pixwin" style="height:100%; margin-bottom: 10px;">
+                    <!--  <object id="pixwin" width="100%" height="100%" standby="Waiting..." classid="clsid:294EEBEC-7677-4EBA-B2D7-3FD669FBF2A2" >
+                      </object>-->
+                </div>
+            </div>
+            <div style="max-height: 290px;overflow-y: auto;">
+                <table class="table table-striped table-condensed table-bordered">
+                    <thead>
+                    <tr>
+                        <th width="40">序号</th>
+                        <th width="120">电梯名称</th>
+                        <th>详细地址</th></tr>
+                    </thead>
+                    <tbody class="lunxunInfo"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!--//右侧信息列表-->
+<script id="tbodyInfo" type="text/x-handlebars-template">
+    {{#each this}}
+    {{#if warning}}
+    <tr onclick="EleCountFun(this)" class="danger">
+        <td>{{addId @index}}</td>
+        <td title="{{EleJobNo}}">{{EleJobNo}}</td>
+        <td title="{{DisAddress}}">{{DisAddress}}</td>
+    </tr>
+    {{else}}
+    <tr onclick="EleCountFun(this)" class="">
+        <td>{{addId @index}}</td>
+        <td title="{{EleJobNo}}">{{EleJobNo}}</td>
+        <td title="{{DisAddress}}">{{DisAddress}}</td>
+    </tr>
+    {{/if}}
+    {{/each}}
+</script>
+<script>
+
+  var anchorArr=[]; //点击point时的保存值
+  var realModalDataArr=[];
+  var readDataArr=[];
+
+  var container = document.getElementById('popup');
+  var popupcontent  = document.getElementById('popup-content');
+  function zeroPad(num, len, radix)
+  {
+    var str = num.toString(radix || 10).toLocaleUpperCase();
+    while (str.length < len)
+    {
+      str = "0" + str;
+    }
+    return str;
+  }
+
+  // 我们需要一个vector的layer来放置图标
+  var layer = new ol.layer.Vector({
+    source: new ol.source.Vector()
+  });
+  /**
+   * Create an overlay to anchor the popup to the map.
+   */
+  var overlay = new ol.Overlay(/** @type {olx.OverlayOptions} */ ({
+    element: container,
+    autoPan: true,
+    autoPanAnimation: {
+      duration: 250
+    }
+  }));
+  var firstlayer = new ol.layer.Tile({
+    source: new ol.source.XYZ({
+      tileUrlFunction: function (tileCoord) {
+        var x = tileCoord[1];
+        var y = -tileCoord[2] - 1;
+        var z = tileCoord[0];
+        return mapUrl+'/TDT/' + z + '/' + x + '/' + y + '.png';
+      },
+      projection:'EPSG:4326'
+    })
+  });
+  console.log(firstlayer);
+  var map = new ol.Map({
+    target: 'map',
+    layers: [
+      firstlayer
+    ],
+    overlays: [overlay],
+    logo:false,
+    view: new ol.View({
+      <!-- 旋转角度 -->
+      <!-- rotation: Math.PI / 6,  -->
+      extent: [115.55, 39.554361777, 117.27, 40.993621790],
+      <!-- 坐标系 -->
+      <!-- center: ol.proj.fromLonLat([116.3975, 39.9087]), -->
+      center: [116.3975, 39.9087],
+      projection: 'EPSG:4326',
+      zoom: 12,
+      minZoom: 11,
+      maxZoom: 17
+    })
+  });
+
+  // 监听singleclick事件
+  map.on('singleclick', function(event){
+
+    // 通过getEventCoordinate方法获取地理位置，再转换为wgs84坐标，并弹出对话框显示
+    <!-- alert(ol.proj.transform(event.coordinate, 'EPSG:3857', 'EPSG:4326')); -->
+
+    var feature = map.forEachFeatureAtPixel(event.pixel, function(feature){
+      return feature;
+    });
+    if (feature) {
+      $(".realRightCon").removeClass("hide");
+      var i=getIndex(anchorArr, feature.ko);
+      var cameradisId=readDataArr[i].DisId;
+        /*获取摄像头列表*/
+      var urlC=configSet+"/api/realtimeinfo/geteleinfobydisid?disId="+cameradisId;
+      getTableData(urlC);
+      map.getView().setZoom(16);
+      map.getView().setCenter(feature.getGeometry().B);
+      overlay.setPosition(undefined);
+    }
+
+  })
+
+  //监听鼠标移动事件
+  map.on('pointermove', function(event){
+    var feature = map.forEachFeatureAtPixel(event.pixel, function(feature){
+      return feature;
+    });
+    if (feature) {
+      //pointmoveArr.push(feature.ko)
+      var html=" ";
+
+      var i=getIndex(anchorArr, feature.ko);
+            for (var j=0;j<realModalDataArr.length;j++){
+              if (readDataArr[i].DisId == realModalDataArr[j].DisId){
+                    //console.log("::",readDataArr[i])
+                html += "<p>"+realModalDataArr[j].DisName+"</p>" +
+                    "<p>全部:"+realModalDataArr[j].TotalCount+",&nbsp;" +
+                    "正常:"+realModalDataArr[j].RealSignal+",&nbsp;"+
+                    "故障:"+realModalDataArr[j].RealFault+",&nbsp;"+
+                    "离线:"+realModalDataArr[j].Offline+"</p>";
+              }
+            }
+      popupcontent.innerHTML =html;
+      overlay.setPosition(event.coordinate);
+    }
+    else
+    {
+      overlay.setPosition(undefined);
+    }
+  })
+
+
+  function getIndex(arr,value) {
+    for(var i in arr){
+      if(arr[i]== value){
+        return i;
+      }
+    }
+  }
+
+  function addpoint(x, y)
+  {
+    var anchor = new ol.Feature({
+      <!-- geometry: new ol.geom.Point([116.3975, 39.9087]) -->
+      geometry: new ol.geom.Point([x, y])
+    });
+
+    // 设置样式，在样式中就可以设置图标
+    anchor.setStyle(new ol.style.Style({
+      image: new ol.style.Icon({
+        src: '../../plugins/maps/images/marker_blue_hd.png',
+        anchor: [0.2, 1]    // 设置图标位置
+      })
+    }));
+       //console.log("anchor:",anchor.ko)
+       anchorArr.push((anchor.ko));
+    // 添加到之前的创建的layer中去
+    layer.getSource().addFeature(anchor);
+  }
+
+  map.addLayer(layer);
+
+  //返回全地图
+  function backMap() {
+    //center: [116.3975, 39.9087],
+    map.getView().setCenter([116.3975, 39.9087]);
+    map.getView().setZoom(12);
+  }
+
+  function mapResize() {
+    map.updateSize();
+  }
+  //获取小区的经纬度及disId及名字
+  $(function () {
+    var url4 = configSet + "/api/realtimeinfo/getdisinfolist?userName="+loginer;
+    getData(url4, function (data) {
+     /* console.log(data)*/
+      readDataArr=data;
+      for (var i=0;i<data.length;i++){
+        var disCoordinate = data[i].DisCoordinate.split(",");
+        addpoint(parseFloat(disCoordinate[0]), parseFloat(disCoordinate[1]));
+      }
+    })
+  })
+
+  //创建弹层的实时数据
+  var socket=createSocket(socktUrl+'/DisRealStatus');
+  socket1=socket;
+  socket.onopen=function () {      	
+      socket.send(loginer);
+    }
+  socket.onmessage=function (e) {
+    var data=JSON.parse(e.data);
+    console.log("地图弹层实时信息",data)
+    if (data.Msg === "DisRealStatus"){
+      realModalDataArr=data.Obj;
+    }
+  }
+
+  //判断是否是正常以显示对应的红色
+  function isSignal() {
+    for (var j=0;j<realModalDataArr.length;j++){
+      for(var i=0;i<readDataArr.length;i++){
+        //判断是否已经有红色的标识了。
+
+        if (readDataArr[i].DisId == realModalDataArr[j].DisId){
+          if (realModalDataArr[j].RealSignal < realModalDataArr[j].TotalCount){
+            if (!readDataArr[i].hasRedSign){
+              readDataArr[i].hasGreenSign=false;
+              var disCoordinate = readDataArr[i].DisCoordinate.split(",");
+              addpointRed(parseFloat(disCoordinate[0]), parseFloat(disCoordinate[1]));
+              readDataArr[i].hasRedSign=true;
+            }
+          }else {
+            if (!readDataArr[i].hasGreenSign){
+              readDataArr[i].hasRedSign=false;
+              var disCoordinate = readDataArr[i].DisCoordinate.split(",");
+              addpoint(parseFloat(disCoordinate[0]), parseFloat(disCoordinate[1]));
+              readDataArr[i].hasGreenSign=true;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  var isCollapse= false;
+  //右侧列表的折叠
+  $(".flexibleBox").click(function () {
+    if(! isCollapse){
+      $(".realRightCon1").animate({"width":3},500,function () {
+        $(this).find("i").removeClass("icon-icon_right").addClass("icon-icon_nav_hez");
+        isCollapse=true;
+      });
+    }else {
+      $(".realRightCon1").animate({"width":"300px"},500,function () {
+        $(this).find("i").removeClass("icon-icon_right").addClass("icon-icon_right");
+        isCollapse=false;
+      });
+    }
+
+
+  })
+  
+  /*摄像机数据获取*/
+  function getTableData(urlC) {
+    getData(urlC,function (Obj,pageNum) {
+      //camerasJson=Obj;
+    /*  console.log("a",Obj)*/
+
+      var myTemplate = Handlebars.compile($("#tbodyInfo").html());
+      Handlebars.registerHelper("addId",function (index) {
+        return parseInt(index)+1;
+      })
+
+      $('.lunxunInfo').html(myTemplate(Obj));
+
+ /*     $.get('../plugins/np_pva/index.js', function () {
+        $.get('../plugins/np_pva/posa.js', function () {
+          $.get('../plugins/np_pva/basefunction.js', function () {
+            fourLunxun(lunXunSeconds,Obj,4)
+          });
+        });
+      });*/
+      pvaFun(function () {
+        fourLunxun(lunXunSeconds,Obj,4)
+      })
+    })
+  }
+  //分屏轮循的点击事件
+  //四分屏轮询的点击事件
+  function fourLunxun(lunXunSeconds,camerasJson,num) {
+    btn_win_four_click();
+    win_hwnd_init();
+    win_beforeunload_main();
+    //var num = 4;
+    var count  = 0; //counter 设置分屏个数
+    var counter = 0; //counter 设置分屏个数
+    var liLengths = camerasJson.length;
+
+    var lastLi = 0;
+
+    // 当摄像机个数少于等于4个时，
+    if (liLengths <= num) {
+      for (var i = 0; i < liLengths; i++) {
+        var stream = {
+          "displayMode": 0,
+          "hwdecoder": 1,
+          "ip": camerasJson[i].ChannelIp,
+          "passwd": camerasJson[i].ChannelPwd,
+          "port": camerasJson[i].ChannelPort,
+          "type": 1,
+          "user": camerasJson[i].PvgUserName,
+          "path":camerasJson[i].ChannelPath
+        }
+          /*var index = GetUsefulIndex();*/
+        playstreamEx(i, stream);
+        console.log("首页的轮询:",stream);
+      }
+    } else {
+      // 当摄像机个数大于4个时，
+      //先显示4个
+      count++;
+      lastLi = num * count;
+      counter = 0;
+      win_beforeunload_main();
+      for (var i = (count * num - num); i < lastLi; i++) {
+        var stream = {
+          "displayMode": 0,
+          "hwdecoder": 1,
+          "ip": camerasJson[i].ChannelIp,
+          "passwd": camerasJson[i].ChannelPwd,
+          "port": camerasJson[i].ChannelPort,
+          "type": 1,
+          "user": camerasJson[i].PvgUserName,
+          "path":camerasJson[i].ChannelPath
+        }
+        console.log(camerasJson[i].ChannelPath)
+        playstreamEx(counter, stream);
+        counter++;
+      }
+      //开始轮询
+      lunxunInterval=setInterval(function () {
+        win_beforeunload_main() //清屏
+        count++;
+        lastLi = num * count;
+        counter = 0;
+        if (lastLi > liLengths) {
+          lastLi = liLengths ;
+        }
+        for (var i = (count * num - num); i < lastLi; i++) {
+          var stream = {
+            "displayMode": 0,
+            "hwdecoder": 1,
+            "ip": camerasJson[i].ChannelIp,
+            "passwd": camerasJson[i].ChannelPwd,
+            "port": camerasJson[i].ChannelPort,
+            "type": 1,
+            "user": camerasJson[i].PvgUserName,
+            "path":camerasJson[i].ChannelPath
+          }
+          console.log(camerasJson[i].ChannelPath)
+          playstreamEx(counter, stream);
+          counter++;
+        }
+        if (lastLi == liLengths) {
+          count = 0;
+        }
+      }, lunXunSeconds)
+
+    }
+  }
+  /*window.onbeforeunload=function () {
+    clearInterval(lunxunInterval);
+  }*/
+</script>

@@ -1,0 +1,337 @@
+
+<div class="mainwrap">
+    <div class="header"><span>监控管理</span>><span>实时数据监测</span>><span>实时电梯监测</span>><span>电梯详细信息</span></div>
+    <button type="button" class="btn btn-default pull-right" style="position: absolute;right: 10px;top: 65px;margin-right: 15px; min-width: 80px;" onclick="backPrev()">返回</button>
+    <!--tab标签栏-->
+    <div class="tab-nav" style="margin-top: 10px;">
+        <ul class="nav nav-tabs">
+            <li role="presentation" class="active"><a href="#">实时信息</a></li>
+            <li role="presentation"><a href="#">电梯信息</a></li>
+            <li role="presentation"><a href="#">出厂信息</a></li>
+<!--            <li role="presentation"><a href="#">安装信息</a></li>-->
+            <li role="presentation"><a href="#">维保信息</a></li>
+        </ul>
+    </div>
+    <!--按钮导航栏-->
+    <div class="tabPage">
+        <div class="col-md-12 row">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="importantInfo col-md-6">
+                        <div class="title"><span></span>主要信息</div>
+                        <div class="labelData realInformation">
+                            <div><label label-data="EleJobNo">电梯名称：</label><span></span></div>
+                            <div><label label-data="EleDeviceId">设备编号：</label><span></span></div>
+                            <div><label label-data="DisAddress">详细地址：</label><span></span></div>
+                            <div><label label-data="MainPrincipal">维保负责人：</label><span></span></div>
+                            <div><label label-data="MainPrincipalPhone">维保负责人手机号：</label><span></span></div>
+                            <div><label label-data="MainUninPhone">维保单位电话：</label><span></span></div>
+                        </div>
+                        <div class="col-md-12 accidentIcon">
+                        </div>
+                    </div>
+                    <div class="realVideoInfo col-md-6">
+                        <div class="title"><span></span>实时视频</div>
+                        <div class="realVideo">
+                            <div id="win_pixwin" style="border: 1px solid #ddd; height: 100%;">
+                                <!-- <object id="pixwin" width="100%" height="100%" standby="Waiting..." classid="clsid:294EEBEC-7677-4EBA-B2D7-3FD669FBF2A2" >
+                                 </object>-->
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-md-4 floorInfo">
+                    <div></div>
+                    <img src="../../images/elevator.jpg"/>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="tabPage">
+        <div class="importantInfo col-md-12">
+            <div class="title"><span></span>电梯信息</div>
+            <div class="labelData col-md-12">
+                <h4>电梯信息</h4>
+            </div>
+            <div class="labelData col-md-6">
+                <div><label label-data="EleJobNo">电梯名称：</label><span></span></div>
+                <div><label label-data="DisAddress">详细地址：</label><span></span></div>
+                <div><label label-data="EleModel">电梯型号：</label><span></span></div>
+                <div><label label-data="EleUseStatus">使用状态：</label><span></span></div>
+            </div>
+            <div class="labelData col-md-6">
+                <div><label label-data="EleDeviceId">设备编号：</label><span></span></div>
+                <div><label label-data="EleType">电梯类型：</label><span></span></div>
+                <div><label label-data="EleFloorCount">层/站/门：</label><span></span></div>
+                <div><label label-data="EleWeight">额定载重：</label><span></span></div>
+            </div>
+
+            <div class="labelData col-md-12">
+                <h4>单位信息</h4>
+            </div>
+            <div class="col-md-6 labelData">
+                <div><label label-data="ManName">制造厂商名称：</label><span></span></div>
+                <div><label label-data="UseName">使用单位：</label><span></span></div>
+                <div><label label-data="ProName">物业单位：</label><span></span></div>
+            </div>
+            <div class="col-md-6 labelData">
+
+                <div><label label-data="MainName">维保单位：</label><span></span></div>
+                <div><label label-data="EquName">产权单位：</label><span></span></div>
+            </div>
+        </div>
+    </div>
+    <div class="tabPage">
+        <div class="importantInfo col-md-12">
+            <div class="title"><span></span>出厂信息</div>
+            <div class="labelData col-md-12">
+                <h4>出厂信息</h4>
+            </div>
+            <div class="col-md-6">
+                <div class="labelData">
+                    <div><label label-data="ManName">制造厂商名称：</label><span></span></div>
+                    <div><label label-data="EleFactoryCode">电梯出厂编号：</label><span></span></div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="labelData">
+                    <div><label label-data="EleManufactureDate">出厂日期：</label><span></span></div>
+                    <div><label label-data="EleQualifiedDate">整梯合格证日期：</label><span></span></div>
+                </div>
+            </div>
+            <div class="labelData col-md-12">
+                <h4>电梯设备合同信息</h4>
+            </div>
+            <div class="col-md-6">
+                <div class="labelData">
+                    <div><label label-data="EleContractCode">电梯设备合同编号：</label><span></span></div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="labelData">
+                    <div><label label-data="EleContractDate">电梯设备合同签订日期：</label><span></span></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="tabPage">
+        <div class="importantInfo col-md-12">
+            <div class="title"><span></span>维保信息</div>
+            <div class="labelData col-md-12">
+                <h4>维保信息</h4>
+            </div>
+            <div class="col-md-6">
+                <div class="labelData">
+                    <div><label label-data="MainName">维保单位：</label><span></span></div>
+                    <div><label label-data="MainUninPhone">维保单位电话：</label><span></span></div>
+                    <div><label label-data="MainAddress">维保单位详细地址：</label><span></span></div>
+
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="labelData">
+                    <div><label label-data="MainPrincipal">维保负责人：</label><span></span></div>
+                    <div><label label-data="MainPrincipalPhone">维保负责人手机号：</label><span></span></div>
+                </div>
+            </div>
+            <div class="labelData col-md-12">
+                <h4>物业单位信息</h4>
+            </div>
+            <div class="col-md-6">
+                <div class="labelData">
+                    <div><label label-data="ProName">物业单位：</label><span></span></div>
+                    <div><label label-data="ProUninPhone">物业单位电话：</label><span></span></div>
+                    <div><label label-data="ProAddress">物业单位详细地址：</label><span></span></div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="labelData">
+                    <h4></h4>
+                    <div><label label-data="ProPrincipal">物业负责人：</label><span></span></div>
+                    <div><label label-data="ProPrincipalPhone">物业负责人手机号：</label><span></span></div>
+
+                </div>
+            </div>
+            <div class="labelData col-md-12">
+                <h4>年检信息</h4>
+            </div>
+            <div class="col-md-6">
+                <div class="labelData">
+                    <div><label label-data="EleBeforeDate">上次年检日期：</label><span></span></div>
+                    <div><label label-data="EleInspectionDate">下次年检日期：</label><span></span></div>
+                    <div><label label-data="EleUseCertificate">使用登记证：</label><span></span></div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="labelData">
+                    <div><label label-data="EleCertificateNum">合格证号：</label><span></span></div>
+                    <div><label label-data="EleInspection">检验机构：</label><span></span></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script type="text/x-handlebars-template" id="accidentInfo">
+    {{#each this}}
+    <!--    {{#if RealOverhaul}}
+            <div class="inlineBlock"><i class="icon-icon_sign_jianx lightYellow"></i>检修</div>
+        {{else}}
+            <div class="inlineBlock"><i class="icon-icon_sign_jianx lightBlack"></i>检修</div>
+        {{/if}}-->
+    {{#if RealOnline}}
+        {{#unless RealFault}}
+        <div class="inlineBlock"><i class="icon-icon_sign_guz lightRed"></i>故障</div>
+        {{else}}
+        <div class="inlineBlock"><i class="icon-icon_sign_guz lightBlack"></i>故障</div>
+        {{/unless}}
+        {{#if RealFireStatus}}
+        <div class="inlineBlock"><i class="icon-icon_jc_5_on lightYellow"></i>消防</div>
+        {{else}}
+        <div class="inlineBlock"><i class="icon-icon_jc_5_on lightBlack"></i>消防</div>
+        {{/if}}
+        {{#if RealOnline}}
+        <div class="inlineBlock"><i class="icon-icon_zaixian2 lightGreen"></i>在线</div>
+        {{else}}
+        <div class="inlineBlock"><i class="icon-icon_zaixian2 lightBlack"></i>在线</div>
+        {{/if}}
+        {{#if RealDirection}}
+        <div class="inlineBlock"><i class="icon-icon_jc_7_on lightBlack"></i>驻停</div>
+        {{else}}
+        <div class="inlineBlock"><i class="icon-icon_jc_7_on lightPurple"></i>驻停</div>
+        {{/if}}
+
+    {{else}}
+        <div class="inlineBlock"><i class="icon-icon_sign_guz lightBlack"></i>故障</div>
+        <div class="inlineBlock"><i class="icon-icon_jc_5_on lightBlack"></i>消防</div>
+        <div class="inlineBlock"><i class="icon-icon_zaixian2 lightBlack"></i>在线</div>
+        <div class="inlineBlock"><i class="icon-icon_jc_7_on lightBlack"></i>驻停</div>
+    {{/if}}
+    {{/each}}
+</script>
+<script type="text/x-handlebars-template" id="elecatorInf">
+    {{#each this}}
+        {{#if RealOnline}}
+            <div class=" {{transformat RealDirection}}">
+                <span class="icon-icon_dt_up lightBlack"></span>
+                <span>{{RealFloor}}</span>
+                <span class="icon-icon_dt_down lightBlack"></span>
+            </div>
+            {{#if RealDoor}}
+                 <img src="?" title="{{RealDoor}}" onerror="addSrcFun(this)"/>
+            {{else}}
+                  <img src="../../images/elevator.jpg"  title="{{RealDoor}}"/>
+            {{/if}}
+        {{else}}
+            <div>
+                <span class="icon-icon_dt_up lightBlack"></span>
+                <span>{{RealFloor}}</span>
+                <span class="icon-icon_dt_down lightBlack"></span>
+            </div>
+            <img src="../../images/elevator.jpg"/>
+        {{/if}}
+    {{/each}}
+</script>
+<script>
+    function addSrcFun(obj) {
+     /* alert($(obj))*/
+      $(obj).attr("src","../../images/elevator.gif?"+Math.random());
+    }
+
+    $(function () {
+        var urlP=configSet+"/api/file/getelevatorinfobyid?eleId="+$("#hiddenCommonValue").attr("realEleId");
+        getData(urlP,function (Obj) {
+          if(Obj=="获取失败！"){
+            alert("数据获取失败");
+          }else {
+            Obj = JSON.parse(Obj);
+//          console.log("obj",Obj);
+            var EleType = ['直梯', '扶梯'];
+            var EleUseStatus = ['正常', '临时停用', '长期停用', '拆除']
+            Obj.EleType = EleType[Obj.EleType - 1];
+            Obj.EleUseStatus = EleUseStatus[Obj.EleUseStatus - 1];
+            if (Obj.EleWeight != ""){
+              Obj.EleWeight=Obj.EleWeight+" kg";
+            }
+            if (Obj.ElePlanTime != ""){
+              Obj.ElePlanTime=Obj.ElePlanTime+" 天"
+            }
+            if (Obj.RunLength != ""){
+              Obj.RunLength=Obj.RunLength+" 秒"
+            }
+            if (Obj.RunTimes != ""){
+                Obj.RunTimes=Obj.RunTimes+" 次"
+            }
+            labelData($(".labelData"), Obj);
+            pvaFun(function () {
+              btn_win_one_click();
+              var stream = {
+                "displayMode": 0,
+                "hwdecoder": 1,
+                "ip": Obj.ChannelIp,
+                "passwd": Obj.ChannelPwd,
+                "port": Obj.ChannelPort,
+                "type": 1,
+                "user": Obj.PvgUserName,
+                "path": Obj.ChannelPath
+              }
+
+              playstreamEx(0, stream);
+              console.log("channelNamedd ：",Obj.ChannelPath)
+            })
+          }
+        })
+    })
+
+    var myTemplate = Handlebars.compile($("#accidentInfo").html());
+    var myTemplate1 = Handlebars.compile($("#elecatorInf").html());
+    var socket=createSocket(socktUrl+'/SingleEleInfo');
+    socket1 = socket;
+    socket.onopen=function () {
+      socket.send($("#hiddenCommonValue").attr("realEleId"));
+    }
+    socket.onmessage=function (e) {
+      var data=JSON.parse(e.data);
+      console.log("具体电梯实时信息:",data);
+      if (data.Msg === "SingleEleInfo"){
+        Handlebars.registerHelper("transformat",function(value){
+          if(value==0){
+            return "";
+          }else if(value==1){
+            return "firstStyle";
+          }else {
+            return "secondStyle"
+          }
+        });
+        $('.accidentIcon').html(myTemplate(data.Obj));
+        $('.floorInfo').html(myTemplate1(data.Obj));
+        var floorInfSpan=$(".floorInfo span")
+
+      }
+    }
+
+  //tab-table切换页
+  var index=0;
+  $(".tabPage").hide().eq(0).show();
+  $(".nav-tabs>li").click(function(){
+    $(this).addClass("active").siblings().removeClass("active");
+    $(".tabPage").hide().eq($(this).index()).show();
+    index = $(this).index();
+  })
+
+    //返回上一页，
+    function backPrev() {
+      $.ajax({
+        url: 'views/monitoringManagement/realDataDetection.html',
+        context: rightContent,
+        success: function(data){
+          socket1.close();
+          console.log('断开前一个.');
+          $(this).html(data);
+        }});
+    }
+
+</script>

@@ -1,0 +1,140 @@
+@import "common.scss";
+.main{
+/*    margin-top: 10px;*/
+    background:$bgColor;
+    .mainShow{
+        border: 1px solid $borderColor;
+        border-radius: 4px;
+        background: white;
+     /*   height: 400px;*/
+        ul{
+            display:flex;
+            flex-wrap: wrap;
+            padding: 0;
+            li{
+                width:18%;
+                min-width:150px;
+                max-width:200px;
+//              height: 264px;
+                border: 1px solid $borderColor;
+                border-radius: 4px;
+                margin:10px 1%;
+                display:flex;
+                flex-direction:  column ;
+                justify-content: space-between;
+                cursor: pointer;
+                .showImg{
+                    width: 100%;
+                    padding:10px;
+                    display:flex;
+                    flex:2;
+                    .showLeft{
+                        width: 75%;
+                        display: flex;
+                        flex-direction: column ;
+                        z-index: 100;
+                        .icon-icon_zaixian2{
+                            height: 12%;
+                            color: $greenLightColor;
+                        }
+                        .icon-icon_sign_outline{
+                            height: 12%;
+                            color:$blackLightColor;
+                        }
+                        div{
+                            width: 100%;
+                            height: 88%;
+                            img{
+                                width:95%;
+                                height: 100%;
+                            }
+                        }
+                    }
+                    .showRight{
+                        width: 25%;
+                        display: flex;
+                        flex-direction: column;
+                        position: relative;
+                        >span{
+                            width: 100%;
+                            color: white;
+                            border-radius: 4px;
+                            font-size: 13px;
+                            text-align: center;
+                            padding: 3px 5px;
+                            box-sizing: border-box;
+                            margin-bottom: 10px;
+                        }
+                        .normal{
+                            background:$greenLightColor ;
+                        }
+                        .fault{
+                            background: $redLightColor;
+                        }
+                        .someOne{
+                            background: $trangleColor;
+                        }
+                        .overhaul{
+                            background: $yellowLightColor;
+                        }
+                        .service{
+                            background: #FDD24F;
+                        }
+                        div{
+                            width: 100%;
+                            position: absolute;
+                            bottom: 4%;
+                            display: flex;
+                            flex-direction: column;
+                            flex: 2;
+                            text-align: center;
+                            justify-content: center;
+                            span{
+                                margin-bottom: 10%;
+                            }
+                           /* span:nth-child(1){
+                                color: $trangleColor;
+                            }*/
+                            span:nth-child(2){
+                                font-weight: bold;
+                                color: #343434;
+                                font-size:24px ;
+                            }
+                            /*span:nth-child(3){
+                                color: $greenLightColor;
+                            }*/
+                        }
+                    }
+                }
+                .showText{
+                    padding:8px 10px;
+                    background: $lightGrayColor;
+                    p{
+                        margin: 0;
+                        color: #343434;
+                        font-size: 13px;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                    }
+                }
+            }
+            li:hover{
+                box-shadow: #666 0px 0px 10px; 
+     
+            }
+        }
+    }
+}
+.firstStyle span:nth-child(1){
+    color:$greenLightColor
+}
+.secondStyle span:nth-child(3){
+    color:$greenLightColor
+}
+@media screen and (max-width:855px){
+    .mainwrap{
+        width: 838px;
+    }
+}
+#estateName{font-style: normal;margin-left: 10px;}

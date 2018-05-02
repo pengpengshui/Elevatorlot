@@ -1,0 +1,242 @@
+
+<div class="mainwrap">
+	<div class="header"><span>事件管理</span>><span>历史事件查询</span></div>
+	<form class="main-choose-list overflowH" id="searchForm">
+		<!--搜索-->
+		<div class="search-wrap">
+			<span class="icon-icon_search" ></span><input type="text" class="form-control" placeholder="请输入关键字" id="search" name="inquire"/>
+		</div>
+		<!--<span class="icon-icon_nav_zhank"></span>-->
+		<select class="form-control width120" name="AbnStatus">
+			<option value="-1"  selected>解除状态</option>
+			<option value="1">已解除</option>
+			<option value="0">未解除</option>
+		</select>
+		<select class="form-control width120" name="AbnIsOverhaul">
+			<option value="-1"  selected>检修状态</option>
+			<option value="1">已检修</option>
+			<option value="0">未检修</option>
+		</select>
+		<input type="text" name="BeginTime" class="form laydate-icon" id="start1" placeholder="开始时间" readonly />
+        <input type="text" name="EndTime" class="form laydate-icon" id="end1" placeholder="结束时间" readonly />
+		<button type="button" class="btn btn-info" onclick="searchPost()">查询</button>
+	</form>
+	<div class="main">
+		<!--表格列表-->
+		<table class="table table-striped table-hover table-bordered"  align="center">
+			<thead>
+				<th width="18%">电梯名称</th>
+				<th width="17%">设备编号</th>
+				<th width="6%">楼层</th>
+				<th width="24%">事件描述</th>
+				<th width="15%">上报时间</th>
+				<th width="10%">解除状态</th>
+				<th width="10%">检修状态</th>
+			</thead>
+			<tbody id="tbody">
+				
+			</tbody>
+		</table>
+		<div class="page tabPages">
+			<div class="pageWrap">
+				<ul class="pagination">
+					<li class="Previous">
+						<span aria-hidden="true">&laquo;</span>
+					</li>
+					
+					<li class="Next">
+						<span aria-hidden="true">&raquo;</span>
+					</li>
+				</ul>
+				<span>共0条数据</span>
+			</div>
+		    <button class="icon-icon_daochu btn btn-info pull-right" onclick="exportInfo()">  导出</button>
+		</div>
+	</div>
+</div>
+
+
+<!--查看弹框-->
+<div class="modal fade" id="myModal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content  modal-maxWidth" style="height: 510px;">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h5 class="modal-title" id="myModalLabel">电梯详情</h5>
+			</div>
+			<div class="modal-body modelStyle tabStyle2" id="modalScroll">
+				<!--tab标签栏-->
+				<div class="tab-nav">
+					<ul class="nav nav-tabs">
+						<li role="presentation " class="active"><a href="#">电梯信息</a></li>
+						<li role="presentation"><a href="#">出厂信息</a></li>
+						<li role="presentation"><a href="#">维保信息</a></li>
+					</ul>
+				</div>
+				<div class="tabPage">
+					<div class="importantInfo col-md-12">
+						<div class="title"><span></span>基本信息</div>
+						<div class="labelData">
+							<div class="col-md-6"><label label-data="EleJobNo">电梯名称:</label><span></span></div>
+							<div class="col-md-6"><label label-data="DisAddress">详细地址:</label><span></span></div>
+							<div class="col-md-6"><label label-data="EleModel">电梯型号:</label><span></span></div>
+							<div class="col-md-6"><label label-data="EleUseStatus">使用状态:</label><span></span></div>
+							<div class="col-md-6"><label label-data="EleWeight">额定载重:</label><span></span></div>
+							<div class="col-md-6"><label label-data="EleDeviceId">设备编号:</label><span></span></div>
+							<div class="col-md-6"><label label-data="EleType">电梯类型:</label><span></span></div>
+							<div class="col-md-6"><label label-data="EleFloorCount">层/站/门:</label><span></span></div>
+						</div>
+					</div>
+					<div class="importantInfo col-md-12">
+						<div class="title"><span></span>单位信息</div>
+						<div class="labelData">
+							<div class="col-md-6"><label label-data="UseName">使用单位:</label><span></span></div>
+							<div class="col-md-6"><label label-data="ProName">物业单位:</label><span></span></div>
+							<div class="col-md-6"><label label-data="MainName">维保单位:</label><span></span></div>
+							<div class="col-md-6"><label label-data="EquName">产权单位:</label><span></span></div>
+							<div class="col-md-6"><label label-data="ManName" class="width100">制造厂商名称:</label><span class="width155"></span></div>
+						</div>
+					</div>
+				</div>
+				<div class="tabPage">
+					<div class="importantInfo col-md-12">
+						<div class="title"><span></span>出厂信息</div>
+						<div class="labelData">
+							<div class="col-md-6"><label label-data="ManName">制造厂商名称:</label><span></span></div>
+							<div class="col-md-6"><label label-data="EleManufactureDate">出厂日期:</label><span></span></div>
+							<div class="col-md-6"><label label-data="EleFactoryCode" class="width100">电梯出厂编号:</label><span class="width150"></span></div>
+							<div class="col-md-6"><label label-data="EleQualifiedDate">整梯合格证日期:</label><span></span></div>
+						</div>
+					</div>
+					<div class="importantInfo col-md-12">
+						<div class="title"><span></span>电梯设备合同信息</div>
+						<div class="labelData">
+							<div class="col-md-6"><label label-data="EleContractCode" class="width100">电梯设备合同编号:</label><span class="width155"></span></div>
+							<div class="col-md-6"><label label-data="EleContractDate" class="width100">电梯设备合同签订日期:</label><span class="width155"></span></div>
+						</div>
+					</div>
+				</div>
+				<div class="tabPage">
+					<div class="importantInfo col-md-12">
+						<div class="title"><span></span>维保单位信息</div>
+						<div class="labelData">
+							<div class="col-md-6"><label label-data="MainName">维保单位:</label><span></span></div>
+							<div class="col-md-6"><label label-data="MainUninPhone">维保单位电话:</label><span></span></div>
+							<div class="col-md-6"><label label-data="MainPrincipalPhone">维保负责人:</label><span></span></div>
+							<div class="col-md-6"><label label-data="MainPrincipalPhone">维保负责人手机号:</label><span></span></div>
+							<div class="col-md-6"><label label-data="MainAddress">维保单位详细地址：</label><span></span></div>
+						</div>
+					</div>
+					<div class="importantInfo col-md-12">
+						<div class="title"><span></span>物业单位信息</div>
+						<div class="labelData">
+							<div class="col-md-6"><label label-data="ProName">物业单位:</label><span></span></div>
+							<div class="col-md-6"><label label-data="ProUninPhone">物业单位电话：</label><span></span></div>
+							<div class="col-md-6"><label label-data="ProPrincipal">物业负责人：</label><span></span></div>
+							<div class="col-md-6"><label label-data="ProPrincipalPhone">物业负责人手机号：</label><span></span></div>
+							<div class="col-md-6"><label label-data="UseAddress">物业单位详细地址:</label><span></span></div>
+						</div>
+					</div>
+					<div class="importantInfo col-md-12">
+						<div class="title"><span></span>年检信息</div>
+						<div class="labelData">
+							<div class="col-md-6"><label label-data="EleBeforeDate">上次年检日期:</label><span></span></div>
+							<div class="col-md-6"><label label-data="EleInspectionDate">下次年检日期:</label><span></span></div>
+							<div class="col-md-6"><label label-data="EleUseCertificate">使用登记证:</label><span></span></div>
+							<div class="col-md-6"><label label-data="EleCertificateNum">合格证号:</label><span></span></div>
+							<div class="col-md-6"><label label-data="EleInspection">检验机构:</label><span></span></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--<div class="modal-footer">
+				
+			</div>-->
+		</div>
+	</div>
+</div>
+
+<!--获取列表模板-->
+<script id="tbodyInfo" type="text/x-handlebars-template">
+    {{#each this}}
+    <tr>
+        <td title="{{EleJobNo}}"><a href="#" onclick="estCountFun('{{AbnEleId}}')">{{EleJobNo}}</a></td>
+		<td title="{{EleDeviceId}}">{{EleDeviceId}}</td>
+		<td title="{{AbnFloor}}">{{AbnFloor}}</td>
+        <td title="{{AbnDetailInfo}}">{{AbnDetailInfo}}</td>
+        <td title="{{AbnCreateTimeView}}">{{AbnCreateTimeView}}</td>
+        <td title="{{AbnStatusName}}">{{AbnStatusName}}</td>
+        <td title="{{AbnIsOverhaulName}}">{{AbnIsOverhaulName}}</td>
+	</tr>
+    {{/each}}
+</script>
+
+<script>
+	var url=configSet+"/api/events/getabnormalinfolist";
+	//获取列表
+	$(function(){
+		getData2(".overflowH",url,1,"#tbody","#tbodyInfo")
+	})
+    
+    //搜索
+    function searchPost(){
+    	getData2(".overflowH",url,1,"#tbody","#tbodyInfo")
+    }
+
+    //电梯详情查看
+    function estCountFun(eleId) {
+      $("#myModal3").modal("show");
+      var urlP=configSet+"/api/file/getelevatorinfobyid?eleId="+eleId;
+      getData(urlP,function (Obj) {
+        var Obj = JSON.parse(Obj);
+//      console.log("obj", Obj);
+		var EleType = ['直梯','扶梯'];
+		var EleUseStatus = ['正常','临时停用','长期停用','拆除']
+        Obj.EleType = EleType[Obj.EleType-1];
+        Obj.EleUseStatus = EleUseStatus[Obj.EleUseStatus-1];
+        Obj.EleWeight=Obj.EleWeight+" kg";
+        Obj.ElePlanTime=Obj.ElePlanTime+" 天"
+        labelData($(".labelData"), Obj);
+      })
+    }
+    $('#myModal3').on('shown.bs.modal', function (e) {
+      var modalScroll=$('#modalScroll');
+      modalScroll.find(".nav-tabs>li").eq(0).addClass("active").siblings().removeClass("active");
+      modalScroll.find(".tabPage").hide().eq(0).show();
+      modalScroll.prop('scrollTop','0')
+    })
+
+    //tab-table切换页
+    var index=0;
+    $(".tabPage").hide().eq(0).show();
+    $(".nav-tabs>li").click(function(){
+      $(this).addClass("active").siblings().removeClass("active");
+      $(".tabPage").hide().eq($(this).index()).show();
+      index = $(this).index();
+    })
+
+    //分页
+	$(".pagination").on("click","a",function () {
+      $(this).parent().addClass("actived").siblings().removeClass("actived");
+	    var pagenum=parseInt($(this).text());
+	    var formse = $(".overflowH").serializeObject();
+		  	formse.pagesize = pageSize;
+	      	formse.pagenum = pagenum;
+	      	 formse.Loginer=loginer;
+		postData(url, JSON.stringify(formse), function (Obj,pageNum) {
+			var myTemplate = Handlebars.compile($("#tbodyInfo").html());
+       		$('#tbody').html(myTemplate(JSON.parse(Obj)));
+  		})
+	})
+
+    function exportInfo(){
+      window.open(configSet+"/api/file/abnormalinfoexport?"+$("#searchForm").serialize()+"&loginer="+loginer);
+    }
+
+    //日期
+	$(function(){
+		dataInit("#start1","#end1");	
+	})
+</script>
+
+

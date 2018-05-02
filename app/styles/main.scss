@@ -1,0 +1,695 @@
+$icon-font-path: '../fonts/';
+// bower:scss
+@import "bower_components/bootstrap-sass/assets/stylesheets/_bootstrap.scss";
+// endbower
+@import "icons.scss";
+@import "data.scss";
+@import "realVideo.scss";
+@import "realInfo.scss";
+@import "tab-table.scss";
+@import "installUnit.scss";
+@import "maintenanceCount.scss";
+
+.browserupgrade {
+  margin: 0.2em 0;
+  background: #ccc;
+  color: #000;
+  padding: 0.2em 0;
+}
+
+/* Customize container */
+@media screen and (max-width: 992px) {
+  .sideNav {position: relative; width:160px; }
+  .sideRight{position: absolute; left: 160px;
+    top:0;right: 0; height: 100%;}
+
+  .mainwrap{
+    width: 1038px;
+  }
+}
+
+/* Responsive: Portrait tablets and up */
+/*@media screen and (max-width: 992px) {
+  html,body{width: 992px;}
+}*/
+//定义变量
+$bgColor: #f9f9f9;
+$navfontColor: #676767;
+$searchColor:#9A9A9A;
+$borderColor:#DDDDDD;
+$btnColor:#EEEEEE;
+$resetBtnColor:#A1ABC2;
+$lightGrayColor:#F1F1F1;
+$trangleColor:#CCCCCC;
+$blueDarkColor:#D6EFF8;
+
+$mainColor:#383D4C;
+$subMainColor:#57607C ;
+$blueColor:#30ADDC ;
+
+$greenLightColor:#81C884;
+$redLightColor:#FD7A70;
+$blackLightColor:#9A9A9A;
+$yellowLightColor:#FDD24F;
+$purpleLightColor: #9574CD;
+
+.inlineBlock{display: inline-block;}
+.overflowH{overflow: hidden;}
+
+.lightGreen{
+  color: $greenLightColor;
+}
+.lightRed{
+  color: $redLightColor;
+}
+.lightBlack{
+  color: $blackLightColor;
+}
+.lightYellow{
+  color: $yellowLightColor;
+}
+.lightPurple{
+  color: $purpleLightColor;
+}
+.fullScreen{position:absolute;width: 100%;height: 100%;}
+
+.logo{
+  height: 70px;
+  vertical-align: middle;
+  line-height: 70px;
+  /*box-shadow: 2px 2px 2px #ccc;*/
+  img{
+    display: inline-block;
+    position: relative;
+    left: 50%;
+    margin-left: -72px;
+  }
+}
+/*sideNav*/
+.sideNav{
+  height: 100%;
+  padding-right: 0;
+  padding-left: 0;
+  background-color: $mainColor;
+  .panel-default{
+     border-width: 0 ;
+     .panel-heading{
+        height: 48px;
+        padding: 0;
+        border: 0;
+        background-color: $mainColor;
+        color: #8895ba;
+       h5{
+        line-height: 48px;
+         a{display: block;
+           span{
+             display:inline-block;
+             position: relative;
+             left: 50%;
+             margin-left: -72px;
+             width:143px;
+             &:hover,&.actived{
+               color: #fff;
+             }
+             i{
+               display: inline-block;
+               margin-right: 18px;
+               width: 18px;height: 18px;
+             }
+           }
+
+         }
+
+       }
+
+     }
+    .panel-collapse.in{
+      background-color: #292D39 ;
+    }
+    .list-group{
+      border-top:none !important;
+     .list-group-item{
+       padding: 0;
+       height: 48px;
+       line-height: 48px;
+        background-color: #292D39 ;
+        border: none;
+        a{
+          display: block;;
+          color: #8895b4;
+          font-size: 14px;
+          span{
+            position: relative;
+            left: 50%;
+            margin-left: -52px;
+            width: 143px;
+            &:hover,&.actived{
+              color: #fff;
+            }
+            i{
+              margin-right: 10px;
+            }
+          }
+
+        }
+     }
+    }
+  }
+}
+.rightHeader{
+  height: 50px;
+  line-height: 50px;
+  box-shadow: 2px 2px 2px #ccc;
+  button{
+    margin-right: 12px;
+    i{margin-right: 5px;vertical-align: unset;}
+    span{display: inline-block;margin-left: 5px; width: 20px;text-align: left; }
+  }
+  .profile{
+    margin-left: 5px;
+    padding-right: 20px;
+    margin-right: 2px;
+    font-size: 16px;
+    cursor: pointer;
+    img{display:inline-block;margin-right: 10px;}
+    span.quit{
+      display: inline-block;
+      margin-right: 30px;
+      margin-left: 45px;
+      border-radius: 50%;
+      width: 28px;height: 28px;line-height: 28px;
+      text-align: center; vertical-align: middle;
+      background-color: $greenLightColor;
+      color: #fff;
+
+      i{line-height: 28px;}
+    }
+  }
+}
+.rightContent{
+    position: absolute;
+    top: 50px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow: auto;
+    background: $bgColor;
+    padding: 10px;
+}
+//导航栏
+.header{
+  font-size: 14px;
+  color: $navfontColor;
+  background: #EEEEEE;
+  height: 45px;
+  line-height: 45px;
+  border: 1px solid $borderColor;
+  border-radius: 4px;
+  span{
+    margin-right: 12px;
+    margin-left: 12px;
+  }
+}
+.menuIcon{
+  color: $blackLightColor;
+  font-size: 14px;
+  margin-left:15px;
+  cursor: pointer;
+}
+.menuIcon.actived{
+  color:$blueColor;}
+
+//导航按钮栏
+.main-choose-list{
+  padding: 10px;
+  padding-left: 0;
+  position: relative;
+    >button{
+        min-width: 80px;
+        margin-right: 5px;
+        margin-left: 5px;
+        border-radius:4px ;
+      vertical-align: top;
+    }
+    >button:nth-of-type(2){
+      background: $greenLightColor;
+      color: white;
+      position: absolute;
+      right: 10px;
+    }
+  .form-control{
+      display: inline-block;
+      width: 176px;
+      margin-right: 10px;
+   }
+    .search-wrap{
+      position: relative;
+      display: inline-block;
+      width: 200px;
+      margin-right: 15px;
+      color:$searchColor;
+      span{
+        position: absolute;
+        top:8px;
+        left:10px;
+        font-size: 18px;
+      }
+      input[type="text"]{
+        padding-left: 35px;
+        width: 200px;
+      }
+  }
+}
+select option{border-color: $blackLightColor; border-right: 1px solid $blackLightColor;}
+.estates{padding:0 5px;}
+.width120{width: 120px !important;}
+
+
+  table{
+    font-size: 13px;
+/*    border-bottom: 1px solid $borderColor;*/
+    text-align: center;
+    &.table{
+      margin: 0;
+    }
+    thead{
+      background-color:$btnColor;
+      th{
+        font-weight: normal;
+        text-align: center;
+        cursor: default;
+      }
+    }
+    tr a {
+        /*text-decoration: underline;*/
+    }
+
+  tbody{
+      td{
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        cursor: default;
+          span,i{
+              margin-right: 10px;
+            cursor: pointer;
+          }
+      }
+  }
+  }
+.main{
+  //border: 1px solid #DDDDDD;
+  background: white;
+  .page,.page2{
+//  position: relative;
+    display: none;
+    overflow: hidden;
+    padding: 20px 0;
+    text-align: center;
+    border: 1px solid #DDDDDD;
+    border-top: none;
+    ul{
+      margin: 0;
+      vertical-align: middle;
+      li{
+        display: inline-block;
+        &.actived{
+          a{
+            background-color: #eeeeee;
+          }
+        }
+
+      }
+    }
+    ul+span{
+      margin-left: 20px;
+    }
+    button{
+      margin-right: 34px;
+      line-height: 1.42;
+//    position: absolute;
+    }
+//  button:nth-child(1){
+//    left: 34px;
+//  }
+//  button:nth-child(2){
+//    left: 124px;
+//  }
+//  button:nth-of-type(3){
+//    right:124px;
+//  }
+//  button:last-child{
+//    right: 34px;
+//    line-height: 1.42;
+//  }
+    .pageWrap{
+        display: inline-block;
+    }
+  }
+}
+
+.table{
+  table-layout: fixed;
+}
+.form{
+    height: 34px;
+    padding: 6px 12px;
+    padding-right: 20px;
+    margin-right: 15px;
+    display: inline-block;
+    width: inherit;;
+    font-size: 14px;
+    line-height: 1.428571429;
+    color: #555555;
+    background-color: #fff;
+    border-radius: 4px;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+}
+.tab_page{
+    
+}
+//弹出层
+.modal-content {
+    border-radius: 0;
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    #map{
+        height: 400px;
+        width: 100%;
+    }
+    #map+div{
+        p{  
+            display: inline-block;
+            float: left;
+            margin-top: 7px;
+        }
+    }
+}
+.modal-header{
+    background: $btnColor;
+    padding-top: 10px;
+    padding-bottom:10px ;
+}
+.modal-title{
+    color: #343434;
+    font-size: 15px;
+}
+.modal-footer{
+     background: $btnColor;
+//   padding-top: 10px;
+//  padding-bottom:10px ;
+    #prompts,#prompts1{
+        float: left;
+        color: red;
+        font-weight: normal;
+    }
+}
+
+//添加框
+.modelStyle{
+    z-index: 9999;
+    max-height: 450px;
+    overflow: auto;
+    .col-md-12{
+        background: rgba(48,173,220,0.2);
+    //  padding:0 15px;
+        border-left: 5px solid #30ADDC;
+        line-height: 27px;
+    }
+    .row{
+        margin: 0;
+        padding-top: 10px;
+        padding-bottom:10px ;
+        input[type="text"]{
+            border-radius: 4px;
+            width: 100%;
+//          border: none;
+            border:1px solid $borderColor;
+        }
+    }
+    .child{
+        text-align: right;
+        font-size: 13px;
+      line-height: 30px;
+      padding-right: 0px; //修改密码部分的样式
+    }
+    #addForm{
+        select{
+            width: 100%;
+        }
+    }
+    strong{
+        color:red;
+        margin-right: 4px;
+    }
+    label{
+        margin-right: 10px;
+        font-weight: normal;
+    }
+    input[type='radio']{
+        outline:none;
+    }
+}
+
+//详情框
+#myModal,#myModal2,#myModal1{
+    table{
+        font-size: 13px;
+        border-bottom: 1px solid $borderColor;
+    &.table{
+          margin: 0;
+    }
+    thead{
+      background-color:$btnColor;
+      th{font-weight: normal;}
+    }
+  }
+  .modal-body{
+    min-height:380px;
+    max-height:450px;
+    overflow: auto;
+  }
+//.pages{
+//  display: flex;
+//  justify-content: center;
+//  align-items: center;
+//  position: relative;
+//  ul{
+//    margin: 0;
+//  }
+//  ul+span{
+//    margin-left: 20px;
+//  }
+//}
+}
+#myModal{
+    .pages{
+        button{
+          position: absolute;
+          right: 24px;
+          background: $greenLightColor;
+          color: white;
+        }
+    }
+    
+}
+#myModal2{
+    .main-choose-list{
+        padding-top: 0;
+    }
+    .pages{
+       button:nth-of-type(1){
+          position: absolute;
+          right: 24px;
+        }
+        button:nth-of-type(2){
+          position: absolute;
+          right: 84px;
+        } 
+    }
+    
+}
+#myModal3{
+    .modal-footer{
+        padding-top: 30px;
+    }
+}
+.Next,.Previous{
+    cursor: pointer;
+}
+
+.modalWrap{
+  position:absolute ;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  background: rgba(0,0,0,0.5);
+  .modalContent{
+    width: 500px;
+    background: white;
+    margin: 0 auto;
+    margin-top: 10%;
+  }
+}
+
+//弹框响应
+
+@media (min-width: 768px){
+    .modal-width {
+        width: 700px;      
+    }
+    .modal-width2 {
+        width: 665px;      
+    }
+    .modal-minWidth{
+        width:500px;  
+    }
+  .modal-exWidth{
+    width:300px;
+  }
+    .modal-maxWidth {
+        width: 900px;      
+        #addForm,#addEleForm{
+            div{
+                padding-left: 5px;
+                padding-right: 5px;
+            }
+        }
+    }
+}
+
+
+//登录页面
+//登录页面
+.wrap{
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right:0;
+  background: url(../images/login_bg.jpg) no-repeat center center ;
+  background-size:cover;
+  header{
+    width: 100%;
+    height: 10%;
+    //      position: absolute;
+    //      top: 0;
+    //      z-index: 999;
+    background:white  url(../images/login_logo.png) no-repeat 40px;
+  }
+  section{
+    width: 100%;
+    height: 90%;
+    //      border: 1px solid red;
+    //      background: url(../images/login_bg.jpg) no-repeat center center ;
+    //      background-size: 100% 100%;
+    position: relative;
+    .loginWrap{
+      position: absolute;
+      top:50%;
+      margin-top: -250px;
+      right:12%;
+      width: 25%;
+      max-width: 350px;
+      height: 320px;
+      background: white;
+      border-radius: 3px;
+      padding: 10px;
+      h3{
+        font-size: 18px;
+        color: #2197C3;
+        text-align: center;
+        margin: 0;
+        line-height: 65px;
+      }
+      div{
+        margin:15px 10px;
+        position: relative;
+        i{
+          font-size: 22px;
+          padding-right: 10px;
+          position: absolute;
+          left: 10px;
+          line-height:45px ;
+          color:$blackLightColor;
+        }
+        input{
+          width: 100%;
+          height: 45px;
+          border-radius: 3px;
+          border: none;
+          border: 1px solid $borderColor;
+          border-radius: 3px;
+          padding-left: 3.8rem;
+        }
+      }
+      p{
+        color: $redLightColor;
+        margin-left: 10px;
+        margin-top:15px;
+      }
+      button{
+        width: 94%;
+        height: 45px;
+        margin-left: 10px;
+        margin-top: 10px;
+        background: $blueColor;
+        color: white;
+        border: none;
+        border-radius: 3px;
+        font-size: 16px;
+      }
+    }
+  }
+}
+/*#dropdownMenu1{margin-right: 20px;}*/
+.profileDropdown{
+  left:auto;
+  right: -22px;
+  min-width: 110px;
+  li{padding-left: 15px;
+    cursor: pointer;
+    &:hover{
+      background-color: $lightGrayColor;
+    }
+    i{margin-right: 5px;  }
+  }
+}
+
+.mCSB_inside>.mCSB_container {
+  margin-right: 10px;}
+
+.modal-dialog{margin:0 auto;width: 100%;height: 100%;}
+#phoneNumber{width: 75%;display: inline-block;}
+#userNameSpan,#phoneNumSpan{line-height: 30px;cursor: default;}
+.phoneEditIcon{margin-left: 15px;color: #999;cursor: pointer;}
+.fc-basicDay-button{display: none;}
+.laydate-icon{cursor: pointer;}
+/*. modal-content #laydate_ok{display: none !important;}*/
+.icon-icon_exit{cursor: pointer;}
+.mCSB_outside+.mCSB_scrollTools{right: -5px;}
+.lunxunInfo td，.lunxunInfo th{cursor: default;}
+.height450{
+  height:450px; overflow-y: auto;
+}
+.backMap{position: absolute;    left: 11px;
+  top: 75px;
+  background-color: rgba(0,60,136,.5);
+  width: 20px;
+  height: 20px;
+  text-align: center;
+  color: #fff;
+  font-size: 13px;border-radius: 3px;line-height: 22px;cursor: pointer;}
+.offlineStyle {
+  >span{display: none;}
+  .direct{
+    >span{color: $blackLightColor;}
+  }
+}
+
+.fc-day-grid-event{cursor: default;}

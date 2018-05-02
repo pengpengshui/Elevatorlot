@@ -1,0 +1,5 @@
+{
+  "configSet":"http://172.16.1.19:8099",
+  "socktUrl":"ws://172.16.1.19:9009",
+  "lunXunSeconds":"10000"
+}

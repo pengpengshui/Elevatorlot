@@ -1,0 +1,315 @@
+
+<div class="mainwrap">
+	<div class="header"><span>单位管理</span>><span>维保单位管理</span></div>
+	<div class="main-choose-list overflowH">
+		<!--搜索-->
+		<div class="search-wrap">
+			<span class="icon-icon_search" ></span><input type="text" class="form-control" placeholder="请输入关键字"/>
+		</div>
+		<!--<span class="icon-icon_nav_zhank"></span>-->
+		<button type="button" class="btn btn-info" onclick="searchFn(url)">查询</button>
+		<!-- Button trigger modal -->
+		<button type="button" class="btn btn-default " data-toggle="modal" id="addModelShow">
+		  添加
+		</button>
+	</div>
+	<div class="main">
+		<!--表格列表-->
+		<table class="table table-striped table-hover table-bordered"  align="center">
+			<thead>
+				<th width="13%">单位名称</th>
+				<th width="8%">电梯数量</th>
+				<th width="13%">单位地址</th>
+				<th width="11%">负责人</th>
+				<th width="11%">负责人手机号</th>
+				<th width="11%">单位电话</th>
+				<th width="11%">最后更新人</th>
+				<th width="11%">最后更新时间</th>
+				<th width="11%">操作</th>
+			</thead>
+			<tbody id="tbody">
+				
+			</tbody>
+		</table>
+		<div class="page" >
+			<div class="pageWrap">
+				<ul class="pagination">
+					<li class="Previous">
+						<span aria-hidden="true">&laquo;</span>
+					</li>
+					
+					<li class="Next">
+						<span aria-hidden="true">&raquo;</span>
+					</li>
+				</ul>
+				<span>共0条数据</span>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- add弹框 /edit弹框-->
+<div class="modal fade" id="addMaintenanceModel" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content modal-width2">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h5 class="modal-title" id="gridSystemModalLabel">添加安装单位</h5>
+      </div>
+      <div class="modal-body modelStyle">
+      	<form id="addForm">
+	        <div class="row">
+				  <div class="col-md-12">单位信息</div>
+			  </div>
+			  <div class="row ">
+				  <div class="col-md-2 child"><strong>*</strong>单位名称</div>
+				  <div class="col-md-10"><input name="MainName" class="form-control" type="text" maxlength="21" /></div>
+			  </div>
+			  <div class="row ">
+				  <div class="col-md-2 child"><strong>*</strong>单位地址</div>
+				  <div class="col-md-10"><input name="MainAddress" class="form-control" type="text" maxlength="35" /></div>
+			  </div>
+			  <div class="row">
+				  <div class="col-md-2 child"><strong>*</strong>负责人</div>
+				  <div class="col-md-4"><input type="text" class="form-control" name="MainPrincipal" maxlength="5" /></div>
+				  <div class="col-md-2 child"><strong>*</strong>负责人手机号</div>
+				  <div class="col-md-4"><input type="text" class="form-control" name="MainPrincipalPhone" maxlength="11" /></div>
+			  </div>
+			  <div class="row">
+				  <div class="col-md-12">联系方式</div>
+			  </div>
+			  <div class="row">
+				  <div class="col-md-2 child"><strong>*</strong>单位电话</div>
+				  <div class="col-md-4"><input type="text" class="form-control" name="MainUninPhone" placeholder="010-88888888" /></div>
+				  <div class="col-md-2 child">单位传真</div>
+				  <div class="col-md-4"><input type="text" class="form-control" name="MainFax" placeholder="010-88888888" /></div>
+			 </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+      	<label id="prompts"></label>
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-info hide" id="addModelBtn">确定</button>
+        <button type="button" class="btn btn-info " id="editModelBtn">修改</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!--确认删除框-->
+<div class="modal fade bs-example-modal-sm" id="conformModel" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+	<div class="modal-dialog modal-sm" role="document">
+		<div class="modal-content modal-exWidth">
+			<div class="modal-body">
+				<p><i class="icon-icon_jc_2_on  lightYellow"></i>您确定要删除么？</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default btn-sm comformQiutBtn" data-dismiss="modal">放弃</button>
+				<button type="button" class="btn btn-primary btn-sm comformSureBtn">确定</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--view弹框-->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content modal-width">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h5 class="modal-title" id="myModalLabel">查看关联电梯</h5>
+      </div>
+      <div class="modal-body height450">
+        <table class="table table-striped table-hover table-bordered"  align="center">
+			<thead>
+				<th width="30%">电梯名称</th>
+				<th width="15%">设备编号</th>
+				<th width="35%">使用单位</th> 
+				<th width="20%">电梯型号</th>
+			</thead>
+			<tbody id="tbody1">
+
+       		</tbody>
+      	</table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--列表模板-->
+<script id="tbodyInfo" type="text/x-handlebars-template">
+    {{#each this}}
+    <tr>
+        <td title="{{MainName}}">{{MainName}}</td>
+        <td><a href="#" onclick="eleCountFun('{{MainId}}')">{{EleCount}}</a></td>
+        <td title="{{MainAddress}}">{{MainAddress}}</td>
+		<td title="{{MainPrincipal}}">{{MainPrincipal}}</td>
+        <td title="{{MainPrincipalPhone}}">{{MainPrincipalPhone}}</td>
+        <td title="{{MainUninPhone}}">{{MainUninPhone}}</td>
+        <td title="{{MainUpdater}}">{{MainUpdater}}</td>
+        <td title="{{MainUpdateTimeView}}">{{MainUpdateTimeView}}</td>
+        <td data-EquId="{{MainId}}"><i class="icon-icon_edit" onclick="editIconFun(this)" data-target="#addMaintenanceModel"></i><i class="icon-icon_delete" onclick="deleteIconFun(this)"></i></td>
+    </tr>
+    {{/each}}
+</script>
+
+<!--电梯数量列表模板-->
+<script  id="tbodyInfo1" type="text/x-handlebars-template">
+	{{#each this}}
+	<tr data-estId="{{EstId}}">
+		<td title="{{EleJobNo}}">{{EleJobNo}}</td>
+		<td title="{{EleDeviceId}}">{{EleDeviceId}}</td>
+		<td title="{{UseName}}">{{UseName}}</td>
+		 
+		<td title="{{EleModel}}">{{EleModel}}</td>
+	</tr>
+	{{/each}}
+</script>
+
+<script>
+	/*请求列表地址*/
+	var url=configSet+"/api/unitmanage/maintenanceunitInfolist?pagesize="+pageSize+"&pagenum=1&inquire="; 
+	//电梯数量请求地址
+	var url2=configSet+"/api/unitmanage/geteleinfolistbymainid?mainId="; 
+	
+	$(function () {
+      getTableData(url);
+    })
+
+	/*数据获取*/
+	function getTableData(url) {
+      getData(url,function (Obj,pageNum) {
+        tableData(Obj,$('#tbody'), $("#tbodyInfo"));
+         	pageFun(pageNum);
+      })
+    }
+	
+	/*添加数据*/
+	$("#addModelShow").click(function () {
+        $('#addMaintenanceModel').modal('show');
+        //清空提示框
+		$("#prompts").html("");
+        $("#addForm")[0].reset();
+		toggle("add","#addMaintenanceModel","添加维保单位信息")
+	})
+	
+	/*模态框的确定点击事件。*/
+	var phoneNum = $("input[name='MainPrincipalPhone']");
+	var fixNum = $("input[name='MainUninPhone']");
+	var faxNum=$("input[name='MainFax']");
+    $("#addModelBtn").click(function () {
+     	var bol=required(addForm.length-1,addForm)
+     	if(bol){
+     		if(!phoneNumber.test(phoneNum.val())){
+				$("#prompts").html("负责人手机号格式错误!");
+				phoneNum.focus();
+				return false;
+			}
+			if(!Landline.test(fixNum.val())){
+				$("#prompts").html("单位电话格式错误!");
+					fixNum.focus();
+					return false;
+			}
+			if(faxNum.val().length>0&&!Landline.test(faxNum.val())){
+				$("#prompts").html("单位传真格式错误!");
+              		faxNum.focus();
+					return false;
+			}
+			$("#prompts").html("");
+     		var postdata = configSet+"/api/unitmanage/maintenanceunitInfoadd ";
+		    var formse = $("#addForm").serializeObject();
+		    formse.MainCreater = loginer;
+		    postData(postdata, JSON.stringify(formse), function () {
+			   getTableData(url);
+		    });
+		    $('#addMaintenanceModel').modal('hide');
+     	} 
+	})
+     
+    var equId="";
+    //删除操作
+    function deleteIconFun(obj) {
+	   equId=$(obj).parent().attr("data-EquId");
+		$("#conformModel").modal();
+    }
+    //模态框的删除点击事件。
+	$(".comformSureBtn").click(function () {
+	  var url1=configSet+"/api/unitmanage/maintenanceunitInfodelete?MainId="+equId+"&MainUpdater="+loginer;
+	  getData(url1,function (Obj) {
+	  	if (Obj == "该单位下已有关联的相机，暂不能删除！" || Obj == "该单位下已有维保人员，暂不能删除！") {
+      		alert(Obj)
+      	}
+      	else {
+          getTableData(url);
+		}
+	  })
+	  $("#conformModel").modal("hide");
+	})
+	
+	//修改操作
+	function editIconFun(obj) {
+	  EquId=$(obj).parent().attr("data-EquId");
+	  var url1=configSet+"/api/unitmanage/getmaintenanceunitinfobyid?mainId="+EquId;
+	  getData(url1,function (Obj) {
+		Obj=JSON.parse(Obj);
+		var inputs=$("#addForm input[type='text']");
+		//清空提示框
+		$("#prompts").html("");
+		$("#addMaintenanceModel").modal("show");
+		editInput(Obj,inputs,"1");
+		//模态框的修改点击事件。
+		toggle("edit","#addMaintenanceModel","修改维保单位信息")
+
+	  })
+	}
+	//模态框的修改点击事件。
+    $("#editModelBtn").click(function () {
+    	var bol=required(addForm.length-1,addForm);
+    	if(bol){
+    		if(!phoneNumber.test(phoneNum.val())){
+				$("#prompts").html("负责人手机号格式错误!");
+				phoneNum.focus();
+				return false;
+			}
+			if(!Landline.test(fixNum.val())){
+				$("#prompts").html("单位电话格式错误!");
+					fixNum.focus();
+					return false;
+			}
+			if(faxNum.val().length>0&&!Landline.test(faxNum.val())){
+				$("#prompts").html("单位传真格式错误!");
+					faxNum.focus();
+					return false;
+			}
+			$("#prompts").html("");
+    		var posturl=configSet+"/api/unitmanage/maintenanceunitinfoupdate";
+		    var formse=$("#addForm").serializeObject();
+		    formse.MainId=EquId;
+		    formse.MainUpdater=loginer;
+		    postData(posturl,JSON.stringify(formse),function () {
+			  getTableData(url);
+		    });
+		    $('#addMaintenanceModel').modal('hide');
+    	}
+	});
+	
+	//楼宇数量的点击事件
+    function eleCountFun(MainId) {
+        var newUrl2=url2 + MainId;
+        builder.builderSelected(newUrl2,$("#myModal"),$("#tbody1"),$("#tbodyInfo1"));
+    }
+	
+	//分页
+	$(".pagination").on("click","a",function () {
+      $(this).parent().addClass("actived").siblings().removeClass("actived");
+	  var pagenum=parseInt($(this).text());
+	  var url2=configSet+"/api/unitmanage/maintenanceunitInfolist?pagesize="+pageSize+"&pagenum="+pagenum+"&inquire="+searchValue;
+	  getData(url2,function (Obj) {
+	    var myTemplate = Handlebars.compile($("#tbodyInfo").html());
+	    $('#tbody').html(myTemplate(JSON.parse(Obj)));
+	  })
+	})
+
+</script>
+
+
